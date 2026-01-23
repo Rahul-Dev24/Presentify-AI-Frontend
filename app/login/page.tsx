@@ -1,7 +1,6 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import Link from "next/link";
 import { useRouter } from "next/navigation";
 import toast from "react-hot-toast";
 
@@ -9,6 +8,7 @@ import AnimatedBackground from "@/components/AnimatedBackground";
 import Loader from "@/components/ui/Loader";
 import { useAuth } from "@/context/AuthContext";
 import { api, getResponseData } from "@/lib/api";
+import Link from "next/link";
 
 export default function LoginPage() {
 	const { login, isAuthenticated, loading } = useAuth();
