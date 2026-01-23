@@ -39,10 +39,10 @@ export function calculateImageDifference(imgData1: ImageData, imgData2: ImageDat
 	return Math.sqrt(avgSquareDiff);
 }
 
+export function debounce<T extends (...args: any[]) => any>(func: T, delay: number = 300) {
+	let timeoutId: ReturnType<typeof setTimeout>;
 
-export function debounce(func: Function, delay: number = 300) {
-	let timeoutId: NodeJS.Timeout;
-	return function (...args: any[]) {
+	return (...args: Parameters<T>): void => {
 		clearTimeout(timeoutId);
 		timeoutId = setTimeout(() => {
 			func(...args);

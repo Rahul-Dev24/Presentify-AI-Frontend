@@ -4,8 +4,17 @@ import { Github, Mail, Twitter, Video } from "lucide-react";
 // Website metadata configuration
 export const SiteMetadata: Metadata = {
 	title: "VideoToPPT - Intelligent Video to PPT Tool",
-	description: "A modern video analysis and PPT generation tool based on WebAV and FFmpeg, supporting screen recording, local video processing and online video analysis",
-	keywords: ["video to ppt", "webav", "ffmpeg", "screen recording", "video analysis", "ppt generation", "intelligent conversion"],
+	description:
+		"A modern video analysis and PPT generation tool based on WebAV and FFmpeg, supporting screen recording, local video processing and online video analysis",
+	keywords: [
+		"video to ppt",
+		"webav",
+		"ffmpeg",
+		"screen recording",
+		"video analysis",
+		"ppt generation",
+		"intelligent conversion",
+	],
 	authors: [{ name: "liwenka1" }],
 	creator: "liwenka1",
 	publisher: "liwenka1",
@@ -31,14 +40,23 @@ export const SiteMetadata: Metadata = {
 export const ProjectInfo = {
 	name: "VideoToPPT",
 	tagline: "Intelligent Video to PPT Tool",
-	description: "A modern video analysis and PPT generation tool based on WebAV and FFmpeg, supporting screen recording, local video processing and online video analysis",
+	description:
+		"A modern video analysis and PPT generation tool based on WebAV and FFmpeg, supporting screen recording, local video processing and online video analysis",
 	version: "1.0.0",
 	repository: {
 		type: "github",
 		url: "https://github.com/liwenka1/video-to-ppt",
 		name: "video-to-ppt",
 	},
-	features: ["Intelligent Video Analysis", "Real-time Content Extraction", "Automatic PPT Generation", "Multi-format Support", "Screen Recording", "Local Processing", "Privacy Protection"],
+	features: [
+		"Intelligent Video Analysis",
+		"Real-time Content Extraction",
+		"Automatic PPT Generation",
+		"Multi-format Support",
+		"Screen Recording",
+		"Local Processing",
+		"Privacy Protection",
+	],
 	technologies: ["TypeScript", "Next.js 15", "WebAV", "FFmpeg.wasm", "Tailwind CSS", "Shadcn/ui"],
 	license: "MIT",
 } as const;

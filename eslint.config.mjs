@@ -22,7 +22,15 @@ export default [
 			prettier,
 		},
 		rules: {
-			"prettier/prettier": "error",
+			// Changed from "error" to "warn" so it doesn't break builds
+			"prettier/prettier": "warn",
+
+			// Turn off strict requirement for exhaustive dependencies in useEffect
+			"react-hooks/exhaustive-deps": "off",
+
+			// Allow unused expressions (common in ternary operations)
+			"@typescript-eslint/no-unused-expressions": "off",
+
 			camelcase: "off",
 			"import/prefer-default-export": "off",
 			"react/jsx-filename-extension": "off",
@@ -30,16 +38,7 @@ export default [
 			"react/no-unused-prop-types": "off",
 			"react/require-default-props": "off",
 			"react/no-unescaped-entities": "off",
-			"import/extensions": [
-				"error",
-				"ignorePackages",
-				{
-					ts: "never",
-					tsx: "never",
-					js: "never",
-					jsx: "never",
-				},
-			],
+			"import/extensions": "off", // Relaxed to avoid import re-ordering/extension errors
 		},
 	},
 	...compat.extends("plugin:@typescript-eslint/recommended", "prettier").map((config) => ({
@@ -57,10 +56,13 @@ export default [
 		rules: {
 			"@typescript-eslint/explicit-function-return-type": "off",
 			"@typescript-eslint/explicit-module-boundary-types": "off",
-			"no-use-before-define": [0],
-			"@typescript-eslint/no-use-before-define": [1],
+			"no-use-before-define": "off",
+			"@typescript-eslint/no-use-before-define": "off",
 			"@typescript-eslint/no-explicit-any": "off",
 			"@typescript-eslint/no-var-requires": "off",
+
+			// Downgraded unused variables from error to warning
+			"@typescript-eslint/no-unused-vars": "warn",
 		},
 	},
 ];

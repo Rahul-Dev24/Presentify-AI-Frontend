@@ -115,7 +115,9 @@ const ScreenRecordingPage = () => {
 			return;
 		}
 
-		console.log(`Capturing screenshot, video dimension: ${video.videoWidth}x${video.videoHeight}, readyState: ${video.readyState}`);
+		console.log(
+			`Capturing screenshot, video dimension: ${video.videoWidth}x${video.videoHeight}, readyState: ${video.readyState}`
+		);
 
 		try {
 			captureAndFilterScreenshot({
@@ -243,7 +245,12 @@ const ScreenRecordingPage = () => {
 					};
 
 					videoRef.current.oncanplay = () => {
-						console.log("Video can play, video resolution:", videoRef.current!.videoWidth, "x", videoRef.current!.videoHeight);
+						console.log(
+							"Video can play, video resolution:",
+							videoRef.current!.videoWidth,
+							"x",
+							videoRef.current!.videoHeight
+						);
 					};
 
 					// Attempt to play the video immediately if the metadata is already loaded
@@ -444,15 +451,15 @@ const ScreenRecordingPage = () => {
 			{/* Background - Fixed to cover entire page */}
 			<div className="fixed inset-0 z-0 overflow-hidden">
 				{/* Gradient overlays */}
-				<div className="absolute inset-0 bg-gradient-to-br from-blue-900/20 via-purple-900/20 to-teal-900/20" />
-				<div className="absolute inset-0 bg-gradient-to-tr from-zinc-900 via-zinc-900/80 to-zinc-900/60" />
+				<div className="absolute inset-0 bg-linear-to-br from-blue-900/20 via-purple-900/20 to-teal-900/20" />
+				<div className="absolute inset-0 bg-linear-to-tr from-zinc-900 via-zinc-900/80 to-zinc-900/60" />
 
 				{/* Grid pattern - covers entire viewport */}
 				<div className="absolute inset-0 bg-[linear-gradient(rgba(255,255,255,0.02)_1px,transparent_1px),linear-gradient(90deg,rgba(255,255,255,0.02)_1px,transparent_1px)] bg-[size:50px_50px] opacity-100" />
 
 				{/* Subtle animated elements */}
-				<div className="absolute top-1/3 left-1/4 w-96 h-96 rounded-full bg-gradient-to-r from-red-500/10 to-orange-500/10 blur-3xl animate-pulse" />
-				<div className="absolute bottom-1/3 right-1/4 w-80 h-80 rounded-full bg-gradient-to-r from-purple-500/10 to-pink-500/10 blur-3xl animate-pulse [animation-delay:3s]" />
+				<div className="absolute top-1/3 left-1/4 w-96 h-96 rounded-full bg-linear-to-r from-red-500/10 to-orange-500/10 blur-3xl animate-pulse" />
+				<div className="absolute bottom-1/3 right-1/4 w-80 h-80 rounded-full bg-linear-to-r from-purple-500/10 to-pink-500/10 blur-3xl animate-pulse [animation-delay:3s]" />
 			</div>
 
 			{/* Header */}
@@ -477,14 +484,16 @@ const ScreenRecordingPage = () => {
 				<div className="grid lg:grid-cols-3 gap-8">
 					{/* Recording Panel */}
 					<div className="lg:col-span-2">
-						<div className="rounded-2xl bg-gradient-to-br from-zinc-900/50 to-zinc-800/30 border border-zinc-700/50 p-6 backdrop-blur-sm hover:border-zinc-600/70 transition-all duration-300">
+						<div className="rounded-2xl bg-linear-to-br from-zinc-900/50 to-zinc-800/30 border border-zinc-700/50 p-6 backdrop-blur-sm hover:border-zinc-600/70 transition-all duration-300">
 							{/* Video Preview */}
-							<div className="aspect-video rounded-lg bg-gradient-to-br from-zinc-800 to-zinc-700 border border-zinc-600/30 overflow-hidden mb-6 relative">
+							<div className="aspect-video rounded-lg bg-linear-to-br from-zinc-800 to-zinc-700 border border-zinc-600/30 overflow-hidden mb-6 relative">
 								{recordingState === "idle" ? (
 									<div className="flex h-full items-center justify-center flex-col space-y-4">
 										<Monitor className="h-16 w-16 text-zinc-500" />
 										<p className="text-zinc-400">Click to start preparing the screen recording</p>
-										<p className="text-xs text-zinc-500">Make sure to use Chrome, Edge or Firefox browser for the best experience</p>
+										<p className="text-xs text-zinc-500">
+											Make sure to use Chrome, Edge or Firefox browser for the best experience
+										</p>
 									</div>
 								) : recordingState === "completed" && videoUrl ? (
 									// Show the recorded video after completion
@@ -576,7 +585,7 @@ const ScreenRecordingPage = () => {
 									{recordingState === "idle" && (
 										<Button
 											onClick={handleStartPrepare}
-											className="flex-1 bg-gradient-to-r from-blue-500 to-purple-600 hover:from-blue-600 hover:to-purple-700"
+											className="flex-1 bg-linear-to-r from-blue-500 to-purple-600 hover:from-blue-600 hover:to-purple-700"
 										>
 											<Monitor className="mr-2 h-5 w-5" />
 											Prepare for recording
@@ -586,7 +595,7 @@ const ScreenRecordingPage = () => {
 									{recordingState === "ready" && (
 										<Button
 											onClick={() => handleStartRecording()}
-											className="flex-1 bg-gradient-to-r from-green-500 to-emerald-600 hover:from-green-600 hover:to-emerald-700"
+											className="flex-1 bg-linear-to-r from-green-500 to-emerald-600 hover:from-green-600 hover:to-emerald-700"
 										>
 											<Play className="mr-2 h-5 w-5" />
 											Start recording
@@ -641,7 +650,7 @@ const ScreenRecordingPage = () => {
 										<>
 											<Button
 												onClick={handleDownloadPPT}
-												className="flex-1 bg-gradient-to-r from-green-500 to-emerald-600 hover:from-green-600 hover:to-emerald-700"
+												className="flex-1 bg-linear-to-r from-green-500 to-emerald-600 hover:from-green-600 hover:to-emerald-700"
 												disabled={screenshots.length === 0}
 											>
 												<Download className="mr-2 h-5 w-5" />
@@ -674,7 +683,7 @@ const ScreenRecordingPage = () => {
 					{/* Info Panel */}
 					<div className="space-y-6">
 						{/* Status */}
-						<div className="rounded-2xl bg-gradient-to-br from-zinc-900/50 to-zinc-800/30 border border-zinc-700/50 p-6 backdrop-blur-sm hover:border-zinc-600/70 transition-all duration-300">
+						<div className="rounded-2xl bg-linear-to-br from-zinc-900/50 to-zinc-800/30 border border-zinc-700/50 p-6 backdrop-blur-sm hover:border-zinc-600/70 transition-all duration-300">
 							<h3 className="text-lg font-semibold mb-4">Recording Status</h3>
 
 							<div className="space-y-3">
@@ -720,7 +729,7 @@ const ScreenRecordingPage = () => {
 
 						{/* Screenshots Preview */}
 						{screenshots.length > 0 && (
-							<div className="rounded-2xl bg-gradient-to-br from-zinc-900/50 to-zinc-800/30 border border-zinc-700/50 p-6 backdrop-blur-sm hover:border-zinc-600/70 transition-all duration-300">
+							<div className="rounded-2xl bg-linear-to-br from-zinc-900/50 to-zinc-800/30 border border-zinc-700/50 p-6 backdrop-blur-sm hover:border-zinc-600/70 transition-all duration-300">
 								<div className="flex items-center justify-between mb-4">
 									<h3 className="text-lg font-semibold">Screenshot Preview ({screenshots.length} images)</h3>
 									<div className="flex gap-2">
@@ -798,7 +807,7 @@ const ScreenRecordingPage = () => {
 						)}
 
 						{/* Tips */}
-						<div className="rounded-2xl bg-gradient-to-br from-blue-900/20 to-purple-900/20 border border-blue-500/30 p-6 backdrop-blur-sm hover:border-blue-500/50 hover:bg-gradient-to-br hover:from-blue-900/30 hover:to-purple-900/30 transition-all duration-300">
+						<div className="rounded-2xl bg-linear-to-br from-blue-900/20 to-purple-900/20 border border-blue-500/30 p-6 backdrop-blur-sm hover:border-blue-500/50 hover:bg-linear-to-br hover:from-blue-900/30 hover:to-purple-900/30 transition-all duration-300">
 							<h3 className="text-lg font-semibold mb-4 text-blue-300">Tips for use</h3>
 
 							<ul className="space-y-2 text-sm text-blue-200">

@@ -173,7 +173,9 @@ const LocalVideoPage = () => {
 
 			// Check if format is supported
 			if (!isSupportedFormat(file)) {
-				setError(`Unsupported video format: ${file.name.split(".").pop()}. Supported formats: MP4, WebM, MOV, AVI, MKV, WMV, etc.`);
+				setError(
+					`Unsupported video format: ${file.name.split(".").pop()}. Supported formats: MP4, WebM, MOV, AVI, MKV, WMV, etc.`
+				);
 				return;
 			}
 
@@ -355,15 +357,15 @@ const LocalVideoPage = () => {
 			{/* Background - Fixed to cover entire page */}
 			<div className="fixed inset-0 z-0 overflow-hidden">
 				{/* Gradient overlays */}
-				<div className="absolute inset-0 bg-gradient-to-br from-blue-900/20 via-purple-900/20 to-teal-900/20" />
-				<div className="absolute inset-0 bg-gradient-to-tr from-zinc-900 via-zinc-900/80 to-zinc-900/60" />
+				<div className="absolute inset-0 bg-linear-to-br from-blue-900/20 via-purple-900/20 to-teal-900/20" />
+				<div className="absolute inset-0 bg-linear-to-tr from-zinc-900 via-zinc-900/80 to-zinc-900/60" />
 
 				{/* Grid pattern - covers entire viewport */}
 				<div className="absolute inset-0 bg-[linear-gradient(rgba(255,255,255,0.02)_1px,transparent_1px),linear-gradient(90deg,rgba(255,255,255,0.02)_1px,transparent_1px)] bg-[size:50px_50px] opacity-100" />
 
 				{/* Subtle animated elements */}
-				<div className="absolute top-1/4 right-1/4 w-96 h-96 rounded-full bg-gradient-to-r from-blue-500/10 to-purple-500/10 blur-3xl animate-pulse" />
-				<div className="absolute bottom-1/4 left-1/4 w-80 h-80 rounded-full bg-gradient-to-r from-purple-500/10 to-teal-500/10 blur-3xl animate-pulse [animation-delay:2s]" />
+				<div className="absolute top-1/4 right-1/4 w-96 h-96 rounded-full bg-linear-to-r from-blue-500/10 to-purple-500/10 blur-3xl animate-pulse" />
+				<div className="absolute bottom-1/4 left-1/4 w-80 h-80 rounded-full bg-linear-to-r from-purple-500/10 to-teal-500/10 blur-3xl animate-pulse [animation-delay:2s]" />
 			</div>
 
 			{/* Header */}
@@ -388,7 +390,7 @@ const LocalVideoPage = () => {
 				<div className="grid lg:grid-cols-3 gap-8">
 					{/* Upload Panel */}
 					<div className="lg:col-span-2">
-						<div className="rounded-2xl bg-gradient-to-br from-zinc-900/50 to-zinc-800/30 border border-zinc-700/50 p-6 backdrop-blur-sm hover:border-zinc-600/70 transition-all duration-300">
+						<div className="rounded-2xl bg-linear-to-br from-zinc-900/50 to-zinc-800/30 border border-zinc-700/50 p-6 backdrop-blur-sm hover:border-zinc-600/70 transition-all duration-300">
 							{!selectedFile ? (
 								/* Upload Area */
 								<div
@@ -398,7 +400,7 @@ const LocalVideoPage = () => {
 									onClick={() => fileInputRef.current?.click()}
 								>
 									<div className="space-y-6 opacity-0 animate-[fadeIn_0.5s_ease-in-out_forwards]">
-										<div className="mx-auto w-20 h-20 rounded-full bg-gradient-to-br from-blue-500/20 to-purple-500/20 flex items-center justify-center group-hover:scale-110 group-hover:from-blue-500/30 group-hover:to-purple-500/30 transition-all duration-300">
+										<div className="mx-auto w-20 h-20 rounded-full bg-linear-to-br from-blue-500/20 to-purple-500/20 flex items-center justify-center group-hover:scale-110 group-hover:from-blue-500/30 group-hover:to-purple-500/30 transition-all duration-300">
 											<Upload className="h-10 w-10 text-blue-400 group-hover:text-blue-300 transition-colors duration-300" />
 										</div>
 
@@ -408,10 +410,12 @@ const LocalVideoPage = () => {
 											<p className="text-sm text-zinc-500">
 												Supports MP4, WebM, MOV, AVI, MKV, WMV, FLV, OGV formats, maximum 200MB
 											</p>
-											<p className="text-xs text-zinc-600 mt-1">Non-MP4 formats will be automatically converted to MP4 for compatibility</p>
+											<p className="text-xs text-zinc-600 mt-1">
+												Non-MP4 formats will be automatically converted to MP4 for compatibility
+											</p>
 										</div>
 
-										<Button className="bg-gradient-to-r from-blue-500 to-purple-600 hover:from-blue-600 hover:to-purple-700">
+										<Button className="bg-linear-to-r from-blue-500 to-purple-600 hover:from-blue-600 hover:to-purple-700">
 											<Upload className="mr-2 h-5 w-5" />
 											Select a file
 										</Button>
@@ -434,27 +438,29 @@ const LocalVideoPage = () => {
 										{(processingState === "analyzing" ||
 											processingState === "extracting" ||
 											processingState === "converting") && (
-												<div className="absolute inset-0 bg-black/80 flex items-center justify-center opacity-0 animate-[fadeIn_0.3s_ease-in-out_forwards]">
-													<div className="text-center space-y-4">
-														<Loader2 className="h-12 w-12 animate-spin mx-auto text-blue-400" />
-														<div>
-															<p className="text-lg font-semibold">
-																{processingState === "converting" && "Converting video format..."}
-																{processingState === "analyzing" && "Analyzing video..."}
-																{processingState === "extracting" && "Extracting key frames..."}
+											<div className="absolute inset-0 bg-black/80 flex items-center justify-center opacity-0 animate-[fadeIn_0.3s_ease-in-out_forwards]">
+												<div className="text-center space-y-4">
+													<Loader2 className="h-12 w-12 animate-spin mx-auto text-blue-400" />
+													<div>
+														<p className="text-lg font-semibold">
+															{processingState === "converting" && "Converting video format..."}
+															{processingState === "analyzing" && "Analyzing video..."}
+															{processingState === "extracting" && "Extracting key frames..."}
+														</p>
+														<p className="text-sm text-zinc-400 mt-2">
+															{processingState === "converting" && "Converting..."}
+															{processingState === "analyzing" && "Analyzing..."}
+															{processingState === "extracting" && "Extracting..."}
+														</p>
+														{processingState === "converting" && (
+															<p className="text-xs text-zinc-500 mt-2">
+																Try quick copy first, then re-encode if needed
 															</p>
-															<p className="text-sm text-zinc-400 mt-2">
-																{processingState === "converting" && "Converting..."}
-																{processingState === "analyzing" && "Analyzing..."}
-																{processingState === "extracting" && "Extracting..."}
-															</p>
-															{processingState === "converting" && (
-																<p className="text-xs text-zinc-500 mt-2">Try quick copy first, then re-encode if needed</p>
-															)}
-														</div>
+														)}
 													</div>
 												</div>
-											)}
+											</div>
+										)}
 									</div>
 
 									{/* File Info */}
@@ -486,7 +492,7 @@ const LocalVideoPage = () => {
 										{processingState === "idle" && (
 											<Button
 												onClick={handleProcessVideo}
-												className="flex-1 bg-gradient-to-r from-blue-500 to-purple-600 hover:from-blue-600 hover:to-purple-700"
+												className="flex-1 bg-linear-to-r from-blue-500 to-purple-600 hover:from-blue-600 hover:to-purple-700"
 											>
 												<Zap className="mr-2 h-5 w-5" />
 												Start Processing
@@ -497,7 +503,7 @@ const LocalVideoPage = () => {
 											<>
 												<Button
 													onClick={handleDownloadPPT}
-													className="flex-1 bg-gradient-to-r from-green-500 to-emerald-600 hover:from-green-600 hover:to-emerald-700"
+													className="flex-1 bg-linear-to-r from-green-500 to-emerald-600 hover:from-green-600 hover:to-emerald-700"
 													disabled={screenshots.length === 0}
 												>
 													<Download className="mr-2 h-5 w-5" />
@@ -539,7 +545,7 @@ const LocalVideoPage = () => {
 					{/* Info Panel */}
 					<div className="space-y-6">
 						{/* Conversion Info */}
-						<div className="rounded-2xl bg-gradient-to-br from-zinc-900/50 to-zinc-800/30 border border-zinc-700/50 p-6 backdrop-blur-sm hover:border-zinc-600/70 transition-all duration-300">
+						<div className="rounded-2xl bg-linear-to-br from-zinc-900/50 to-zinc-800/30 border border-zinc-700/50 p-6 backdrop-blur-sm hover:border-zinc-600/70 transition-all duration-300">
 							<h3 className="text-lg font-semibold mb-4">Conversion Strategy</h3>
 
 							<div className="space-y-3">
@@ -548,17 +554,21 @@ const LocalVideoPage = () => {
 										<Zap className="h-4 w-4 text-blue-400" />
 										<span className="font-medium text-blue-300">Intelligent Copy First</span>
 									</div>
-									<p className="text-xs text-blue-200/80">Try direct copy first (very fast), and if failed, smart re-encode</p>
+									<p className="text-xs text-blue-200/80">
+										Try direct copy first (very fast), and if failed, smart re-encode
+									</p>
 								</div>
 							</div>
 
 							<div className="mt-4 p-3 bg-zinc-800/20 border border-zinc-700/30 rounded-lg">
-								<p className="text-xs text-zinc-400">Most videos can be directly copied, with a speed boost of 10-50 times and zero quality loss</p>
+								<p className="text-xs text-zinc-400">
+									Most videos can be directly copied, with a speed boost of 10-50 times and zero quality loss
+								</p>
 							</div>
 						</div>
 
 						{/* Status */}
-						<div className="rounded-2xl bg-gradient-to-br from-zinc-900/50 to-zinc-800/30 border border-zinc-700/50 p-6 backdrop-blur-sm hover:border-zinc-600/70 transition-all duration-300">
+						<div className="rounded-2xl bg-linear-to-br from-zinc-900/50 to-zinc-800/30 border border-zinc-700/50 p-6 backdrop-blur-sm hover:border-zinc-600/70 transition-all duration-300">
 							<h3 className="text-lg font-semibold mb-4">Processing Status</h3>
 
 							<div className="space-y-3">
@@ -585,11 +595,11 @@ const LocalVideoPage = () => {
 								{(processingState === "converting" ||
 									processingState === "analyzing" ||
 									processingState === "extracting") && (
-										<div className="flex items-center justify-between">
-											<span className="text-zinc-400">Progress</span>
-											<span>{progress}%</span>
-										</div>
-									)}
+									<div className="flex items-center justify-between">
+										<span className="text-zinc-400">Progress</span>
+										<span>{progress}%</span>
+									</div>
+								)}
 
 								<div className="flex items-center justify-between">
 									<span className="text-zinc-400">Extracted frames</span>
@@ -600,7 +610,7 @@ const LocalVideoPage = () => {
 
 						{/* Screenshots Preview */}
 						{screenshots.length > 0 && (
-							<div className="rounded-2xl bg-gradient-to-br from-zinc-900/50 to-zinc-800/30 border border-zinc-700/50 p-6 backdrop-blur-sm hover:border-zinc-600/70 transition-all duration-300">
+							<div className="rounded-2xl bg-linear-to-br from-zinc-900/50 to-zinc-800/30 border border-zinc-700/50 p-6 backdrop-blur-sm hover:border-zinc-600/70 transition-all duration-300">
 								<div className="flex items-center justify-between mb-4">
 									<h3 className="text-lg font-semibold">Preview ({screenshots.length} frames)</h3>
 									<div className="flex gap-2">
@@ -678,7 +688,7 @@ const LocalVideoPage = () => {
 						)}
 
 						{/* Tips */}
-						<div className="rounded-2xl bg-gradient-to-br from-blue-900/20 to-purple-900/20 border border-blue-500/30 p-6 backdrop-blur-sm hover:border-blue-500/50 hover:bg-gradient-to-br hover:from-blue-900/30 hover:to-purple-900/30 transition-all duration-300">
+						<div className="rounded-2xl bg-linear-to-br from-blue-900/20 to-purple-900/20 border border-blue-500/30 p-6 backdrop-blur-sm hover:border-blue-500/50 hover:bg-linear-to-br hover:from-blue-900/30 hover:to-purple-900/30 transition-all duration-300">
 							<h3 className="text-lg font-semibold mb-4 text-blue-300">Processing Instructions</h3>
 
 							<ul className="space-y-2 text-sm text-blue-200">
