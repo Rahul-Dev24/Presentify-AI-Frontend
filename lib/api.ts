@@ -1,7 +1,7 @@
 import axios, { Axios } from "axios";
 
 export const api: Axios = axios.create({
-	baseURL: "http://localhost:8080/api/v1",
+	baseURL: "https://presentify-ai-backend.netlify.app/api/v1",
 	withCredentials: true,
 	headers: {
 		credentials: "include",
