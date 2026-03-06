@@ -1,7 +1,5 @@
 "use client";
 
-import React from "react";
-import Image from "next/image";
 import { Camera, Fingerprint, Github, Globe, Shield, Sparkles, Twitter, Wallet, Zap } from "lucide-react";
 
 import { Badge } from "@/components/ui/badge";
@@ -14,7 +12,7 @@ export default function SettingsTransparent() {
 	return (
 		// Parent is now transparent - it will inherit the background of your Layout/Wrapper
 		<div className="min-h-screen bg-transparent text-slate-200 selection:bg-blue-500/30">
-			<div className="relative max-w-[1200px] mx-auto">
+			<div className="relative max-w-300 mx-auto">
 				{/* Header Section */}
 				<header className="flex flex-col md:flex-row md:items-end justify-between gap-6 mb-12">
 					<div className="space-y-2">
@@ -38,11 +36,11 @@ export default function SettingsTransparent() {
 				{/* Bento Grid */}
 				<div className="grid grid-cols-12 gap-6">
 					{/* Main Profile - High Transparency Glass */}
-					<Card className="col-span-12 lg:col-span-8 bg-white/[0.02] border-white/10 backdrop-blur-2xl p-8 rounded-[2.5rem] shadow-2xl group transition-all duration-500 hover:border-white/20">
+					<Card className="col-span-12 lg:col-span-8 bg-white/2 border-white/10 backdrop-blur-2xl p-8 rounded-[2.5rem] shadow-2xl group transition-all duration-500 hover:border-white/20">
 						<div className="relative flex flex-col md:flex-row items-start gap-8">
 							<div className="relative">
-								<div className="h-32 w-32 rounded-[2rem] overflow-hidden border border-white/10 shadow-2xl group-hover:scale-105 transition-transform duration-500">
-									<Image src="https://github.com/shadcn.png" alt="Avatar" className="w-full h-full object-cover" />
+								<div className="h-32 w-32 rounded-4xl overflow-hidden border border-white/10 shadow-2xl group-hover:scale-105 transition-transform duration-500">
+									<img src="https://github.com/shadcn.png" alt="Avatar" className="w-full h-full object-cover" />
 								</div>
 								<button className="absolute -bottom-2 -right-2 p-2.5 bg-blue-600 rounded-2xl border-2 border-white/10 text-white hover:bg-blue-500 transition-colors shadow-lg">
 									<Camera size={16} />
@@ -56,7 +54,7 @@ export default function SettingsTransparent() {
 											Identity
 										</label>
 										<Input
-											className="bg-white/[0.03] border-white/10 rounded-2xl h-12 focus:border-blue-500/50 focus:ring-0 transition-all"
+											className="bg-white/3 border-white/10 rounded-2xl h-12 focus:border-blue-500/50 focus:ring-0 transition-all"
 											defaultValue="Rahul Sharma"
 										/>
 									</div>
@@ -65,7 +63,7 @@ export default function SettingsTransparent() {
 											Contact
 										</label>
 										<Input
-											className="bg-white/[0.03] border-white/10 rounded-2xl h-12 focus:border-blue-500/50 focus:ring-0 transition-all"
+											className="bg-white/3 border-white/10 rounded-2xl h-12 focus:border-blue-500/50 focus:ring-0 transition-all"
 											defaultValue="rahul@presentify.ai"
 										/>
 									</div>
@@ -123,7 +121,7 @@ export default function SettingsTransparent() {
 						].map((item, i) => (
 							<Card
 								key={i}
-								className="bg-white/[0.01] border-white/5 backdrop-blur-xl p-7 rounded-[2.5rem] hover:bg-white/[0.04] hover:border-white/10 transition-all duration-300"
+								className="bg-white/1 border-white/5 backdrop-blur-xl p-7 rounded-[2.5rem] hover:bg-white/4 hover:border-white/10 transition-all duration-300"
 							>
 								<div
 									className={`h-12 w-12 ${item.bg} ${item.color} rounded-2xl flex items-center justify-center mb-6 shadow-inner`}
@@ -140,7 +138,7 @@ export default function SettingsTransparent() {
 					</div>
 
 					{/* Integrations - Dashed Border Glass */}
-					<Card className="col-span-12 bg-white/[0.01] border-dashed border-white/10 backdrop-blur-md p-8 rounded-[2.5rem] flex flex-col md:flex-row items-center justify-between gap-8 transition-all hover:border-white/20">
+					<Card className="col-span-12 bg-white/1 border-dashed border-white/10 backdrop-blur-md p-8 rounded-[2.5rem] flex flex-col md:flex-row items-center justify-between gap-8 transition-all hover:border-white/20">
 						<div className="space-y-1 text-center md:text-left">
 							<h4 className="text-lg font-bold tracking-tight">Cloud Integrations</h4>
 							<p className="text-xs text-slate-500 font-medium">Auto-sync exports to your workspace.</p>

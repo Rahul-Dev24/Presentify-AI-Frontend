@@ -49,3 +49,21 @@ export function debounce<T extends (...args: any[]) => any>(func: T, delay: numb
 		}, delay);
 	};
 }
+
+export function formatDuration(seconds: any) {
+	const totalSeconds = Math.floor(seconds);
+
+	const hrs = Math.floor(totalSeconds / 3600);
+	const mins = Math.floor((totalSeconds % 3600) / 60);
+	const secs = totalSeconds % 60;
+
+	if (hrs > 0) {
+		// HH:MM:SS
+		return [hrs.toString().padStart(2, "0"), mins.toString().padStart(2, "0"), secs.toString().padStart(2, "0")].join(
+			":"
+		);
+	}
+
+	// MM:SS
+	return [mins.toString().padStart(2, "0"), secs.toString().padStart(2, "0")].join(":");
+}

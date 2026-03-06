@@ -642,3 +642,40 @@ export async function preprocessVideo(video: HTMLVideoElement, canvas: HTMLCanva
 
 	return finalThreshold;
 }
+
+type AudioFormat = "mp3" | "wav" | "m4a";
+
+interface CloudinaryAudioOptions {
+	format?: AudioFormat;
+	audioQuality?: number; // e.g. 32, 64, 128
+	startOffset?: number; // seconds
+	duration?: number; // seconds
+}
+
+export function cloudinaryVideoToAudio(videoUrl: string, options: CloudinaryAudioOptions = {}): string {
+	const { format = "mp3", audioQuality, startOffset, duration } = options;
+
+	if (!videoUrl.includes("/video/upload/")) {
+		throw new Error("Invalid Cloudinary video URL");
+	}
+
+	const transformations: string[] = [];
+
+	if (typeof startOffset === "number") {
+		transformations.push(`so_${startOffset}`);
+	}
+
+	if (typeof duration === "number") {
+		transformations.push(`du_${duration}`);
+	}
+
+	transformations.push(`f_${format}`);
+
+	if (typeof audioQuality === "number") {
+		transformations.push(`aq_${audioQuality}`);
+	}
+
+	const transformationString = transformations.join(",");
+
+	return videoUrl.replace("/video/upload/", `/video/upload/${transformationString}/`).replace(/\.\w+$/, `.${format}`);
+}

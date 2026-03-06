@@ -24,7 +24,7 @@ interface MenuItem {
 	active?: boolean;
 }
 
-interface HearderModel {
+export interface HearderModel {
 	title: string;
 	mainTitle: string;
 	subTitle: string | React.ReactNode;
@@ -36,11 +36,11 @@ const Dashboard = () => {
 	const { isAuthenticated, user, logout, loading } = useAuth();
 	const router = useRouter();
 
-	useEffect(() => {
-		if (!loading && !isAuthenticated) {
-			router.push("/login");
-		}
-	}, [isAuthenticated, router]);
+	// useEffect(() => {
+	// 	if (!loading && !isAuthenticated) {
+	// 		router.push("/login");
+	// 	}
+	// }, [isAuthenticated, router]);
 
 	const [isSidebarOpen, setIsSidebarOpen] = useState(false);
 	const [currentTab, setCurrentTab] = useState("dashboard");
@@ -115,7 +115,6 @@ const Dashboard = () => {
 			...item,
 			active: i === index,
 		}));
-
 		setMenuList(updatedMenu);
 		setCurrentTab(updatedMenu[index].key);
 		if (isSidebarOpen) toggleSidebar();
@@ -215,8 +214,7 @@ const Dashboard = () => {
 						</>
 					) : currentTab === "generate_ppt" ? (
 						<>
-							<DashboardHeader Header={HeaderList[1]} />
-							<VideoToPPTPage />
+							<VideoToPPTPage Header={HeaderList[1]} />
 						</>
 					) : currentTab === "settings" ? (
 						<SettingsPage />

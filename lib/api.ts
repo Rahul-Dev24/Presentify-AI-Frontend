@@ -8,9 +8,9 @@ export const api: Axios = axios.create({
 	},
 });
 
-export const getResponseData = async (res: any): Promise<{ data: any; res: any }> => {
+export const getResponseData = async (res: any): Promise<{ metaData: any; res: any }> => {
 	return {
-		data: res?.data,
-		res,
+		res: res?.data,
+		metaData: res,
 	};
 };
