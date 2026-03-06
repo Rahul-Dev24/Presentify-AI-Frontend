@@ -29,8 +29,7 @@ export async function POST(req: Request) {
 			// REQUIRED (2025+)
 			jsRuntimes: "node",
 
-			// 🔥 SABR FIX
-			extractorArgs: "youtube:player_client=android",
+
 
 			format: "bestaudio/best",
 		});
