@@ -78,13 +78,13 @@ export default function LoginPage() {
 				resObj["fName"] = fName;
 				resObj["lName"] = lName;
 			}
-			const { data } = await getResponseData(await api.post(`/auth/${loginFlag ? "login" : "register"}`, resObj));
+			const { res } = await getResponseData(await api.post(`/auth/${loginFlag ? "login" : "register"}`, resObj));
 
-			if (data?.success) {
-				toast.success(data?.message);
+			if (res?.success) {
+				toast.success(res?.message);
 				if (loginFlag) login();
 			} else {
-				toast.error(data?.message);
+				toast.error(res?.message);
 				return;
 			}
 			resetForms();
