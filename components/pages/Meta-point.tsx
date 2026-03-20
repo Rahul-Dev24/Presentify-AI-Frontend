@@ -29,7 +29,7 @@ const INITIAL_DATA: Slide[] = [
 	},
 ];
 
-const MetaPointPage = ({ silde }: { silde: any[] }) => {
+const MetaPointPage = ({ silde, fileId }: { silde: any[], fileId: number }) => {
 	const [slides, setSlides] = useState<any[]>(silde || INITIAL_DATA);
 	const [activeIndex, setActiveIndex] = useState<number>(0);
 	const [showJson, setShowJson] = useState<boolean>(false);
@@ -111,12 +111,12 @@ const MetaPointPage = ({ silde }: { silde: any[] }) => {
 		try {
 			setShowPPT(true);
 			setPPTLoading(true);
-			const serverRes = await getResponseData(await api.post("/getSlides", { slideArray: silde }));
-			const data = serverRes?.res?.data;
+			const serverRes = await getResponseData(await api.post("/getSlides", { slideArray: silde, fileId }));
+			const data = serverRes?.res?.data?.slides || serverRes?.res?.data?.response[0]?.slides;
 			setPPT(data);
 			setPPTLoading(false);
 
-			console.log(data);
+			console.log("gfhjfghgfjfgjhgfjhfjhf", data);
 
 		} catch (err: any) {
 			toast.error(err.message);

@@ -42,6 +42,7 @@ const VideoToPPTPage = ({ Header }: Props) => {
 	const [video, setVideo] = useState<any>(null);
 	const [showPreview, setShowPreview] = useState(false);
 	const [uploadedFile, setUploadedFile] = useState<any>(null);
+	const [fileId, setFileId] = useState<number>(0);
 
 	const handleUpload = (uploadFile: any) => {
 		setUploadedFile(uploadFile);
@@ -94,6 +95,7 @@ const VideoToPPTPage = ({ Header }: Props) => {
 				res = data.res;
 			}
 			console.log(res);
+			setFileId(res?.data?.id);
 			setLoadingStepCount(loadingStepsTimes.length - 1);
 			if (res?.success && res?.message) toast.success(res.message);
 			else if (!res?.success && res?.message) toast.error(res.message);
@@ -115,7 +117,7 @@ const VideoToPPTPage = ({ Header }: Props) => {
 	return (
 		<>
 			{showPreview ? (
-				<VideoPreviewPage data={[video]} showPreview={showPreviewHandler} />
+				<VideoPreviewPage data={[video]} fileId={fileId} showPreview={showPreviewHandler} />
 			) : (
 				<>
 					<DashboardHeader Header={Header} />

@@ -10,7 +10,7 @@ import MetaPointPage from "./Meta-point";
 
 const LoadingSteps = ["Loading Media", "Extracting Media", "Media Extracted", "Generating Slides", "All Most Done..."];
 
-const VideoPreviewPage = ({ data, showPreview }: { data: any; showPreview: (a: boolean) => void }) => {
+const VideoPreviewPage = ({ data, fileId = 0, showPreview }: { data: any; fileId?: number; showPreview: (a: boolean) => void }) => {
 	// const [ppt, setPPT] = useState<any>([]);
 	const [isLoadingPPT, setIsLoadingPPT] = useState(false);
 	const [showPPT, setShowPPT] = useState(false);
@@ -89,7 +89,7 @@ const VideoPreviewPage = ({ data, showPreview }: { data: any; showPreview: (a: b
 				isLoadingPPT ? (
 					<ProgressTracker steps={LoadingSteps} currentStep={loadingStepCount} />
 				) : (
-					<MetaPointPage silde={slide} />
+					<MetaPointPage silde={slide} fileId={fileId} />
 				)
 			) : video?.type == "YOUTUBE" ? (
 				<div className="min-h-screen p-3 text-gray-100 font-sans">

@@ -67,3 +67,17 @@ export function formatDuration(seconds: any) {
 	// MM:SS
 	return [mins.toString().padStart(2, "0"), secs.toString().padStart(2, "0")].join(":");
 }
+
+export function formateDate(date: string) {
+	const newDate = new Date(date);
+
+	const formatted = newDate.toLocaleString("en-IN", {
+		day: "2-digit",
+		month: "short",
+		year: "numeric",
+		hour: "2-digit",
+		minute: "2-digit",
+		hour12: true
+	});
+	return formatted;
+}

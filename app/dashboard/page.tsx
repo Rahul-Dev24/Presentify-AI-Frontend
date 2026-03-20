@@ -36,11 +36,11 @@ const Dashboard = () => {
 	const { isAuthenticated, user, logout, loading } = useAuth();
 	const router = useRouter();
 
-	// useEffect(() => {
-	// 	if (!loading && !isAuthenticated) {
-	// 		router.push("/login");
-	// 	}
-	// }, [isAuthenticated, router]);
+	useEffect(() => {
+		if (!loading && !isAuthenticated) {
+			router.push("/login");
+		}
+	}, [isAuthenticated, router]);
 
 	const [isSidebarOpen, setIsSidebarOpen] = useState(false);
 	const [currentTab, setCurrentTab] = useState("dashboard");
