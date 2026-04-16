@@ -1,4 +1,4 @@
-import { FileVideo, Mic, Presentation } from "lucide-react";
+import { CheckCircle2, FileText, FileVideo, Mic, Presentation, Sparkles } from "lucide-react";
 
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
@@ -6,8 +6,33 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { SourceDistribution } from "../DebounceChart";
 import { UsageChart } from "../UserChat";
+import { useEffect, useState } from "react";
+import toast from "react-hot-toast";
+import { api, getResponseData } from "@/lib/api";
 
 const DashboardPage = () => {
+
+	const [creditCount, setCreditCount] = useState<number | null>(0);
+	const maxCredits = 50;
+
+	useEffect(() => {
+		const fetchCredits = async () => {
+			try {
+				const { res } = await getResponseData(await api.get("/dashboard/getCreditCount"));
+				setCreditCount(res?.data);
+			} catch (error) {
+				toast.error("Failed to load credits");
+				setCreditCount(0);
+			}
+		};
+		fetchCredits();
+	}, []);
+
+	// Calculate percentage (clamped between 0-100)
+	const percentage = creditCount !== null
+		? Math.min((creditCount / maxCredits) * 100, 100)
+		: 0;
+
 	return (
 		<>
 			{/* Quick Action Cards */}
@@ -55,7 +80,7 @@ const DashboardPage = () => {
 
 				{/* AI Tokens Card (The "Pro" Look) */}
 				<Card className="relative overflow-hidden border-none bg-linear-to-br from-blue-600 via-blue-700 to-purple-700 text-white shadow-2xl">
-					{/* Decorative Circle for "AI" feel */}
+					{/* Decorative Circle */}
 					<div className="absolute -right-4 -top-4 w-24 h-24 bg-white/10 rounded-full blur-2xl" />
 
 					<CardHeader className="relative z-10 flex flex-row items-center justify-between pb-2">
@@ -64,16 +89,28 @@ const DashboardPage = () => {
 							<Presentation className="w-5 h-5 text-white" />
 						</div>
 					</CardHeader>
+
 					<CardContent className="relative z-10 mt-2">
 						<div className="flex items-baseline gap-1">
-							<span className="text-4xl font-extrabold tracking-tight">12</span>
-							<span className="text-blue-200 text-lg">/ 50</span>
+							<span className="text-4xl font-extrabold tracking-tight">
+								{creditCount !== null ? creditCount : "--"}
+							</span>
+							<span className="text-blue-200 text-lg">/ {maxCredits}</span>
 						</div>
-						{/* Mini Progress Bar */}
+
+						{/* Dynamic Progress Bar */}
 						<div className="w-full bg-black/20 h-1.5 mt-4 rounded-full overflow-hidden">
-							<div className="bg-white h-full transition-all duration-1000" style={{ width: "24%" }} />
+							<div
+								className="bg-white h-full transition-all duration-700 ease-in-out"
+								style={{ width: `${percentage}%` }}
+							/>
 						</div>
-						<p className="text-[10px] mt-2 text-blue-100/80 uppercase font-medium tracking-tighter">Resets in 8 days</p>
+
+						<p className="text-[10px] mt-2 text-blue-100/80 uppercase font-medium tracking-tighter">
+							{creditCount !== null && creditCount >= maxCredits
+								? "Usage Limit Reached"
+								: "Usage tracked per generation"}
+						</p>
 					</CardContent>
 				</Card>
 			</div>
@@ -100,7 +137,7 @@ const DashboardPage = () => {
 									Analytics
 								</TabsTrigger>
 
-								<TabsTrigger
+								{/* <TabsTrigger
 									value="allProjects"
 									className="snap-start whitespace-nowrap rounded-xl 
           px-4 sm:px-6 py-2.5 text-sm font-semibold transition-all
@@ -108,9 +145,9 @@ const DashboardPage = () => {
           data-[state=active]:text-blue-600 data-[state=active]:shadow-md"
 								>
 									All Projects
-								</TabsTrigger>
+								</TabsTrigger> */}
 
-								<TabsTrigger
+								{/* <TabsTrigger
 									value="processing"
 									className="snap-start whitespace-nowrap rounded-xl 
           px-4 sm:px-6 py-2.5 text-sm font-semibold transition-all
@@ -127,9 +164,9 @@ const DashboardPage = () => {
 											<span className="relative inline-flex h-2 w-2 rounded-full bg-amber-500" />
 										</span>
 									</div>
-								</TabsTrigger>
+								</TabsTrigger> */}
 
-								<TabsTrigger
+								{/* <TabsTrigger
 									value="completed"
 									className="snap-start whitespace-nowrap rounded-xl 
           px-4 sm:px-6 py-2.5 text-sm font-semibold transition-all
@@ -137,9 +174,9 @@ const DashboardPage = () => {
           data-[state=active]:text-blue-600 data-[state=active]:shadow-md"
 								>
 									Completed
-								</TabsTrigger>
+								</TabsTrigger> */}
 
-								<TabsTrigger
+								{/* <TabsTrigger
 									value="archived"
 									className="snap-start whitespace-nowrap rounded-xl 
           px-4 sm:px-6 py-2.5 text-sm font-semibold transition-all
@@ -147,7 +184,7 @@ const DashboardPage = () => {
           data-[state=active]:text-blue-600 data-[state=active]:shadow-md"
 								>
 									Archived
-								</TabsTrigger>
+								</TabsTrigger> */}
 							</TabsList>
 						</div>
 					</div>
@@ -156,14 +193,42 @@ const DashboardPage = () => {
 				<TabsContent value="chart" className="space-y-4">
 					<div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
 						{/* Main Area Chart (Takes 2 columns) */}
-						<div className="lg:col-span-2">
+						{/* <div className="lg:col-span-2">
 							<UsageChart />
-						</div>
+						</div> */}
 
 						{/* Smaller Distribution Chart (Takes 1 column) */}
-						<div className="lg:col-span-1 h-full">
+						<div className="lg:col-span-2 h-full">
 							<SourceDistribution />
 						</div>
+
+
+						<div className="lg:col-span-1">
+							{[
+								{
+									icon: <FileText className="text-blue-500" />,
+									title: "AI Summarization",
+									desc: "Key points extracted and turned into slides.",
+								},
+								{
+									icon: <Sparkles className="text-purple-500" />,
+									title: "Designer Layouts",
+									desc: "Beautifully designed slides based on content. From title slides to section dividers, we've got you covered. Our AI is succinct and provides just enough information to be useful: it will generally only generate a single function or a couple lines of code to fulfill the instruction. If the AI does not know how to follow the instruction, the ASSISTANT should not reply at all.",
+								},
+							].map((f, i) => (
+								<div
+									key={i}
+									className="flex gap-4 p-4 mb-4 rounded-xl bg-white/40 dark:bg-gray-800/40 border border-white/20"
+								>
+									<div className="mt-1">{f.icon}</div>
+									<div>
+										<h4 className="font-bold text-gray-900 dark:text-white mb-2">{f.title}</h4>
+										<p className="text-sm text-gray-500 dark:text-gray-400">{f.desc}</p>
+									</div>
+								</div>
+							))}
+						</div>
+
 					</div>
 				</TabsContent>
 

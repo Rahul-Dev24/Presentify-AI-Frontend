@@ -26,6 +26,7 @@ export default function LoginPage() {
 	const [password, setPassword] = useState<string>("");
 	const [cPassword, setCPassword] = useState<string>("");
 	const [loginFlag, setLoginFlag] = useState<boolean>(true);
+	const [loadingBtn, setLoadingBtn] = useState<boolean>(false);
 
 	const validateEmail = (email: string) => {
 		const emailRegex = /^[a-zA-Z0-9_.+-]+@[a-zA-Z0-9-]+\.[a-zA-Z0-9-.]+$/;
@@ -70,6 +71,7 @@ export default function LoginPage() {
 		}
 
 		try {
+			setLoadingBtn(true);
 			const resObj: any = {
 				email,
 				password,
@@ -94,6 +96,8 @@ export default function LoginPage() {
 		} catch (err: Error | any) {
 			toast.error(err?.message);
 			resetForms();
+		} finally {
+			setLoadingBtn(false);
 		}
 	};
 
@@ -185,14 +189,14 @@ export default function LoginPage() {
 							<div className="flex flex-col space-y-1">
 								<div className="flex items-center justify-between">
 									<label className="text-sm font-semibold text-gray-500 dark:text-gray-400">Password</label>
-									{loginFlag && (
+									{/* {loginFlag && (
 										<a
 											href="#"
 											className="text-sm text-blue-600 dark:text-blue-400 hover:underline focus:text-blue-800"
 										>
 											Forgot Password?
 										</a>
-									)}
+									)} */}
 								</div>
 								<input
 									type="password"
@@ -238,7 +242,7 @@ export default function LoginPage() {
 									className="w-full px-4 py-2 text-lg font-semibold text-white transition-colors duration-300 bg-blue-500 dark:bg-blue-600 rounded-md shadow hover:bg-blue-600 dark:hover:bg-blue-700 focus:outline-none focus:ring-blue-200 dark:focus:ring-blue-900 focus:ring-4"
 									style={{ backgroundColor: loading ? "lightblue" : undefined }}
 								>
-									{loading ? (
+									{loading || loadingBtn ? (
 										<div className="flex items-center justify-center mx-auto">
 											<Loader className="m-auto" />
 										</div>

@@ -51,6 +51,7 @@ const VideoToPPTPage = ({ Header }: Props) => {
 		else toast.error("Failed to upload file");
 	};
 
+
 	const showPreviewHandler = (flag: boolean) => {
 		setShowPreview(flag);
 		setLoadingStepCount(0);
@@ -88,7 +89,7 @@ const VideoToPPTPage = ({ Header }: Props) => {
 					type: "LOCAL_VIDEO",
 					audioUrl: cloudinaryVideoToAudio(uploadedFile.secure_url),
 					videoUrl: uploadedFile.secure_url,
-					categories: uploadedFile.categories,
+					// categories: uploadedFile.categories,
 					duration: formatDuration(uploadedFile.duration),
 				});
 				const data = await getResponseData(ServerRes);
@@ -132,10 +133,12 @@ const VideoToPPTPage = ({ Header }: Props) => {
 										<Tabs defaultValue="video" onValueChange={setSourceType} className="w-full">
 											<div className="border-b dark:border-gray-700 bg-[#0f172a] p-4 pt-6 -mt-6">
 												<TabsList className="grid w-full grid-cols-2 max-w-md mx-auto bg-gray-200/50 dark:bg-gray-800/50">
-													<TabsTrigger value="video" className="gap-2">
+													<TabsTrigger
+														value="video" className="gap-2">
 														<Video size={16} /> Video
 													</TabsTrigger>
-													<TabsTrigger value="audio" className="gap-2">
+													<TabsTrigger
+														value="audio" className="gap-2">
 														<Mic size={16} /> Audio
 													</TabsTrigger>
 												</TabsList>
@@ -144,27 +147,32 @@ const VideoToPPTPage = ({ Header }: Props) => {
 											<div className="p-8 space-y-6">
 												{/* URL Input Section */}
 												<div className="space-y-4">
-													<div className="relative">
-														<div className="absolute inset-y-0 left-3 flex items-center text-gray-400">
-															{sourceType === "video" ? <Youtube size={20} /> : <LinkIcon size={20} />}
-														</div>
-														<Input
-															value={videoUrl}
-															onChange={(e: any) => setVideoUrl(e?.target?.value)}
-															placeholder={
-																sourceType === "video" ? "Paste YouTube or Video URL..." : "Paste Audio URL..."
-															}
-															className="pl-10 h-14 text-md border-gray-200 dark:border-gray-700 focus:ring-2 focus:ring-blue-500 rounded-xl bg-white dark:bg-gray-900"
-														/>
-													</div>
+													{sourceType === "video" && (
+														<>
+															<div className="relative">
+																<div className="absolute inset-y-0 left-3 flex items-center text-gray-400">
+																	{sourceType === "video" ? <Youtube size={20} /> : <LinkIcon size={20} />}
+																</div>
+																<Input
+																	value={videoUrl}
+																	onChange={(e: any) => setVideoUrl(e?.target?.value)}
+																	placeholder={
+																		sourceType === "video" ? "Paste YouTube or Video URL..." : "Paste Audio URL..."
+																	}
+																	className="pl-10 h-14 text-md border-gray-200 dark:border-gray-700 focus:ring-2 focus:ring-blue-500 rounded-xl bg-white dark:bg-gray-900"
+																/>
+															</div>
+															<div className="relative flex items-center py-2">
+																<div className="grow border-t border-gray-200 dark:border-gray-700"></div>
+																<span className="shrink mx-4 text-gray-400 text-sm font-medium uppercase tracking-wider">
+																	OR
+																</span>
+																<div className="grow border-t border-gray-200 dark:border-gray-700"></div>
+															</div>
+														</>
+													)}
 
-													<div className="relative flex items-center py-2">
-														<div className="grow border-t border-gray-200 dark:border-gray-700"></div>
-														<span className="shrink mx-4 text-gray-400 text-sm font-medium uppercase tracking-wider">
-															OR
-														</span>
-														<div className="grow border-t border-gray-200 dark:border-gray-700"></div>
-													</div>
+
 
 													{uploadedFile ? (
 														<VideoPlayer url={uploadedFile?.secure_url} />
@@ -175,12 +183,15 @@ const VideoToPPTPage = ({ Header }: Props) => {
 
 												{/* Settings & Generate Button */}
 												<div className="flex flex-col sm:flex-row gap-4 pt-4">
-													<Button variant="outline" className="flex-1 h-12 rounded-xl gap-2">
+													{/* <Button variant="outline" className="flex-1 h-12 rounded-xl gap-2">
 														<Settings size={18} /> Presentation Settings
-													</Button>
+													</Button> */}
+													<div className="flex-2 h-12 rounded-xl gap-2">
+
+													</div>
 													<Button
 														onClick={() => handleExtraction()}
-														className="flex-2 h-12 rounded-xl bg-linear-to-r from-blue-600 to-purple-600 hover:opacity-90 shadow-lg shadow-blue-500/25 gap-2 text-md font-bold"
+														className="flex-1 h-12 rounded-xl bg-linear-to-r from-blue-600 to-purple-600 hover:opacity-90 shadow-lg shadow-blue-500/25 gap-2 text-md font-bold"
 													>
 														<Sparkles size={18} /> Generate Slides
 													</Button>

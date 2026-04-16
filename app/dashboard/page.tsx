@@ -2,7 +2,7 @@
 
 import React, { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
-import { Clock, Headphones, LayoutDashboard, Menu, Plus, Settings, Sparkles, Video, X } from "lucide-react";
+import { Clock, FolderSync, Headphones, LayoutDashboard, Menu, Plus, Settings, Sparkles, Video, X } from "lucide-react";
 
 import AnimatedBackground from "@/components/AnimatedBackground";
 import DashboardHeader, { ButtonType } from "@/components/DashboardHeader";
@@ -16,6 +16,7 @@ import Profile from "@/components/Profile";
 import { Button } from "@/components/ui/button";
 import Loader from "@/components/ui/Loader";
 import { useAuth } from "@/context/AuthContext";
+import ScreenRecordingPage from "../screen-recording/page";
 
 interface MenuItem {
 	label: string;
@@ -87,19 +88,19 @@ const Dashboard = () => {
 			icon: <Sparkles size={20} />,
 		},
 		{
+			label: "Screen Recording",
+			key: "recording",
+			icon: <FolderSync size={20} />,
+		},
+		{
 			label: "My Projects",
 			key: "projects",
 			icon: <Clock size={20} />,
 		},
 		{
-			label: "My Videos",
+			label: "My Assets",
 			key: "videos",
 			icon: <Video size={20} />,
-		},
-		{
-			label: "My Audios",
-			key: "audios",
-			icon: <Headphones size={20} />,
 		},
 		{
 			label: "Settings",
@@ -224,6 +225,10 @@ const Dashboard = () => {
 						<MyVideosPage />
 					) : currentTab === "audios" ? (
 						<MyAudiosPage />
+					) : currentTab === "recording" ? (
+						<div className="-m-8" >
+							<ScreenRecordingPage isFrom={'dashboard'} />
+						</div>
 					) : null}
 				</div>
 			</main>

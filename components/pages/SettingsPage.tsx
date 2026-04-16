@@ -7,8 +7,51 @@ import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Switch } from "@/components/ui/switch";
+import { useEffect, useState } from "react";
+import { useAuth } from "@/context/AuthContext";
+import toast from "react-hot-toast";
+import { api, getResponseData } from "@/lib/api";
 
 export default function SettingsTransparent() {
+
+	const [name, setName] = useState<string>("");
+	const [email, setEmail] = useState<string>("");
+
+
+	useEffect(() => {
+		getProfile();
+	}, []);
+
+	const getProfile = async () => {
+		const { res } = await getResponseData(await api.get("/user/getUser"));
+		if (res?.success) {
+			console.log(res);
+			setName(res?.data?.fName + " " + res?.data?.lName);
+			setEmail(res?.data?.email);
+		}
+	};
+
+	const updateProfile = async () => {
+		if (!name || !email) {
+			toast.error("Please enter mandatory fields");
+			return;
+		}
+		const userName = name?.split(" ");
+		try {
+			const updatedUser = await getResponseData(await api.put("/user/update", {
+				fName: userName[0],
+				lName: userName[1],
+				email
+			}));
+			if (updatedUser) toast.success("Profile updated successfully");
+			getProfile()
+		} catch (err: any) {
+			toast.error(err.message);
+		}
+
+	};
+
+
 	return (
 		// Parent is now transparent - it will inherit the background of your Layout/Wrapper
 		<div className="min-h-screen bg-transparent text-slate-200 selection:bg-blue-500/30">
@@ -27,24 +70,24 @@ export default function SettingsTransparent() {
 						<Button variant="ghost" className="rounded-xl px-6 bg-white/10 text-white shadow-xl shadow-black/20">
 							Account
 						</Button>
-						<Button variant="ghost" className="rounded-xl px-6 text-slate-400 hover:text-white transition-colors">
+						{/* <Button variant="ghost" className="rounded-xl px-6 text-slate-400 hover:text-white transition-colors">
 							Workspace
-						</Button>
+						</Button> */}
 					</div>
 				</header>
 
 				{/* Bento Grid */}
 				<div className="grid grid-cols-12 gap-6">
 					{/* Main Profile - High Transparency Glass */}
-					<Card className="col-span-12 lg:col-span-8 bg-white/2 border-white/10 backdrop-blur-2xl p-8 rounded-[2.5rem] shadow-2xl group transition-all duration-500 hover:border-white/20">
+					<Card className="col-span-12 bg-white/2 border-white/10 backdrop-blur-2xl p-8 rounded-[2.5rem] shadow-2xl group transition-all duration-500 hover:border-white/20">
 						<div className="relative flex flex-col md:flex-row items-start gap-8">
 							<div className="relative">
 								<div className="h-32 w-32 rounded-4xl overflow-hidden border border-white/10 shadow-2xl group-hover:scale-105 transition-transform duration-500">
 									<img src="https://github.com/shadcn.png" alt="Avatar" className="w-full h-full object-cover" />
 								</div>
-								<button className="absolute -bottom-2 -right-2 p-2.5 bg-blue-600 rounded-2xl border-2 border-white/10 text-white hover:bg-blue-500 transition-colors shadow-lg">
+								{/* <button className="absolute -bottom-2 -right-2 p-2.5 bg-blue-600 rounded-2xl border-2 border-white/10 text-white hover:bg-blue-500 transition-colors shadow-lg">
 									<Camera size={16} />
-								</button>
+								</button> */}
 							</div>
 
 							<div className="flex-1 space-y-6 w-full">
@@ -54,6 +97,8 @@ export default function SettingsTransparent() {
 											Identity
 										</label>
 										<Input
+											onChange={(e: any) => setName(e?.target?.value)}
+											value={name}
 											className="bg-white/3 border-white/10 rounded-2xl h-12 focus:border-blue-500/50 focus:ring-0 transition-all"
 											defaultValue="Rahul Sharma"
 										/>
@@ -63,12 +108,16 @@ export default function SettingsTransparent() {
 											Contact
 										</label>
 										<Input
+											onChange={(e: any) => setEmail(e?.target?.value)}
+											value={email}
 											className="bg-white/3 border-white/10 rounded-2xl h-12 focus:border-blue-500/50 focus:ring-0 transition-all"
 											defaultValue="rahul@presentify.ai"
 										/>
 									</div>
 								</div>
-								<Button className="bg-white/90 hover:bg-white text-black rounded-2xl px-10 h-12 font-bold transition-all shadow-xl shadow-white/5">
+								<Button
+									onClick={updateProfile}
+									className="bg-white/90 hover:bg-white text-black rounded-2xl px-10 h-12 font-bold transition-all shadow-xl shadow-white/5">
 									Update Profile
 								</Button>
 							</div>
@@ -76,7 +125,7 @@ export default function SettingsTransparent() {
 					</Card>
 
 					{/* Plan Card - Gradient Glass */}
-					<Card className="col-span-12 lg:col-span-4 bg-linear-to-br from-blue-600/20 to-purple-600/20 backdrop-blur-3xl p-8 rounded-[2.5rem] border border-white/10 text-white relative overflow-hidden group">
+					{/* <Card className="col-span-12 lg:col-span-4 bg-linear-to-br from-blue-600/20 to-purple-600/20 backdrop-blur-3xl p-8 rounded-[2.5rem] border border-white/10 text-white relative overflow-hidden group">
 						<div className="absolute inset-0 bg-linear-to-br from-blue-600/10 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-700" />
 						<div className="relative z-10 h-full flex flex-col justify-between">
 							<div>
@@ -92,10 +141,10 @@ export default function SettingsTransparent() {
 								Manage Billing
 							</Button>
 						</div>
-					</Card>
+					</Card> */}
 
 					{/* AI Settings - Low Opacity Grid */}
-					<div className="col-span-12 grid grid-cols-1 md:grid-cols-3 gap-6">
+					{/* <div className="col-span-12 grid grid-cols-1 md:grid-cols-3 gap-6">
 						{[
 							{
 								title: "AI Designer",
@@ -135,7 +184,7 @@ export default function SettingsTransparent() {
 								<p className="text-xs leading-relaxed text-slate-500 font-medium">{item.desc}</p>
 							</Card>
 						))}
-					</div>
+					</div> */}
 
 					{/* Integrations - Dashed Border Glass */}
 					<Card className="col-span-12 bg-white/1 border-dashed border-white/10 backdrop-blur-md p-8 rounded-[2.5rem] flex flex-col md:flex-row items-center justify-between gap-8 transition-all hover:border-white/20">

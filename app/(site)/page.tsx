@@ -114,7 +114,7 @@ const HomePage = () => {
 									</Button>
 								</Link>
 
-								<Link href="/local-video">
+								<Link href="/dashboard">
 									<Button size="lg" variant="outline" className="border-zinc-700 text-white hover:bg-zinc-800">
 										<Upload className="mr-2 h-5 w-5" />
 										Upload video

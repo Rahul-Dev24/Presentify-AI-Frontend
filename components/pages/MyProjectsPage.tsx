@@ -1,6 +1,6 @@
 "use client";
 
-import React from "react";
+import React, { useEffect } from "react";
 import {
 	Clock,
 	Copy,
@@ -25,54 +25,161 @@ import {
 	DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { Input } from "@/components/ui/input";
+import { api, getResponseData } from "@/lib/api";
+import NoRecordFound from "../NoRecordFound";
+import Loading from "../ui/loading";
+import { debounce, formateDate } from "@/lib/utils";
+import { downloadPresentation } from "@/lib/ppt-generation";
+import toast from "react-hot-toast";
 
-const MY_PROJECTS = [
-	{
-		id: "1",
-		title: "AI Revolution in Healthcare",
-		status: "completed",
-		type: "Video",
-		duration: "12:45",
-		slides: 18,
-		lastModified: "2m ago",
-		previewColor: "bg-linear-to-br from-blue-500/20 to-indigo-500/20",
-	},
-	{
-		id: "2",
-		title: "Quarterly Sales Pitch - Q1",
-		status: "processing",
-		type: "Audio",
-		duration: "05:20",
-		slides: 0,
-		lastModified: "Just now",
-		previewColor: "bg-linear-to-br from-purple-500/20 to-pink-500/20",
-	},
-	{
-		id: "3",
-		title: "Sustainability Workshop",
-		status: "completed",
-		type: "YouTube",
-		duration: "45:00",
-		slides: 32,
-		lastModified: "1 day ago",
-		previewColor: "bg-linear-to-br from-emerald-500/20 to-teal-500/20",
-	},
-];
+const SLIDE_CORE_CSS = `
+ * { 
+    box-sizing: border-box; 
+    margin: 0; 
+    padding: 0; 
+  }
+  
+  body, html { 
+    width: 1280px; 
+    height: 720px; 
+    overflow: hidden; 
+    background: #000;
+  }
+
+  .viewport {
+    width: 1280px;
+    height: 720px;
+    position: relative;
+    overflow: hidden;
+    /* This ensures that even if the AI makes a mistake, 
+       the content is clipped to the slide boundaries */
+  }
+
+  /* Force the AI's generated .slide to stay exactly 1280x720 */
+  .slide {
+    width: 1280px !important;
+    height: 720px !important;
+    padding: 60px 80px !important;
+    display: flex !important;
+    flex-direction: column !important;
+    justify-content: center !important;
+    align-items: flex-start !important;
+    position: absolute !important;
+    top: 0;
+    left: 0;
+  }
+
+  h1 {
+    font-size: 52px !important;
+    line-height: 1.2 !important;
+    margin-bottom: 30px !important;
+    max-width: 900px !important;
+  }
+
+  ul {
+    list-style: none !important;
+    width: 100% !important;
+  }
+
+  li {
+    font-size: 26px !important;
+    line-height: 1.5 !important;
+    margin-bottom: 15px !important;
+    max-width: 850px !important;
+  }
+`;
+
+const wrapSlideHtml = (html: string) => `
+  <html><head><style>${SLIDE_CORE_CSS}</style></head>
+  <body><div class="viewport">${html}</div></body></html>
+`;
+
+const tagsMap: Record<string, string> = {
+	"YOUTUBE": 'Youtube',
+	"LOCAL_VIDEO": 'Local Video',
+	"AUDIO": 'Audio',
+} as const;
 
 export default function MyProjectsSection() {
+	const [projects, setProjects] = React.useState<any[]>([]);
+	const [loading, setLoading] = React.useState<boolean | null>(true);
+
+	useEffect(() => {
+		getProjects();
+	}, []);
+
+	const getProjects = async (search?: string) => {
+		setLoading(true);
+		const { res } = await getResponseData(await api.get("/project/getProject", { params: { search } }));
+		const data = (res?.data || []).map((item: any) => ({
+			...item,
+			createdAt: formateDate(item?.createdAt) // ✅ fixed name
+		}));
+		console.log(data[0]?.response);
+		setProjects(data);
+		setLoading(false);
+
+	}
+
+	const downloadPPT = async (slides: any[]) => {
+		console.log("slides", slides);
+
+		if (slides?.length === 0) {
+			toast.error("Please add at least one slide");
+			return
+		}
+		try {
+			const endSlides = slides.map((slide) => {
+				return {
+					...slide,
+					htmlContent: wrapSlideHtml(slide.htmlContent)
+				}
+			})
+			// We import the service we just wrote
+			await downloadPresentation(endSlides);
+
+			// Optional: Show a success toast/notification
+			console.log("Download started!");
+		} catch (err) {
+			toast.error("PPT Export Error");
+		}
+	}
+
+	const deleteProject = async (fileId: string) => {
+		try {
+			const response = await api.delete("/project/deleteProject", { data: { fileId } });
+			const { res } = await getResponseData(response);
+			if (res?.success) toast.success(res?.message);
+			else toast.error(res?.message);
+			getProjects();
+		} catch (error: any) {
+			toast.error(error?.message);
+			console.error("Error fetching project:", error);
+		}
+	}
+
+	const searchProject = debounce(async (searchText: string) => {
+		getProjects(searchText);
+	}, 600);
+
 	return (
 		<div className="space-y-6">
 			{/* --- Filter & Search Header --- */}
 
 			<div className="flex flex-col md:flex-row gap-4 items-center justify-between bg-white/[0.03] p-4 rounded-2xl backdrop-blur-3xl border border-white/10">
+
+				<div>
+					<h1 className="text-2xl font-bold text-gray-200" >My Projects</h1>
+				</div>
 				<div className="relative w-full md:w-96">
 					<Search className="absolute left-3 top-1/2 -translate-y-1/2 text-slate-500" size={18} />
 					<Input
+						onChange={(e: any) => searchProject(e?.target?.value)}
 						placeholder="Search presentations..."
 						className="pl-10 bg-white/[0.05] border-white/10 focus:border-blue-500/50 rounded-xl h-11 text-white"
 					/>
 				</div>
-				<div className="flex items-center gap-2 w-full md:w-auto">
+				{/* <div className="flex items-center gap-2 w-full md:w-auto">
 					<Button
 						variant="ghost"
 						className="flex-1 md:flex-none gap-2 rounded-xl bg-white/[0.05] border border-white/10 hover:bg-white/10 transition-all"
@@ -82,12 +189,14 @@ export default function MyProjectsSection() {
 					<Button className="flex-1 md:flex-none gap-2 bg-blue-600 hover:bg-blue-500 rounded-xl shadow-lg shadow-blue-500/20 font-bold">
 						Recent First
 					</Button>
-				</div>
+				</div> */}
 			</div>
 
 			{/* --- Projects Grid --- */}
 			<div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-				{MY_PROJECTS.map((project) => (
+				{loading && <div className="col-span-12 rounded-2xl overflow-hidden" ><Loading /></div>}
+				{!loading && projects?.length === 0 && <div className="col-span-12 rounded-2xl overflow-hidden" ><NoRecordFound /></div>}
+				{projects.map((project) => (
 					<Card
 						key={project.id}
 						className="group relative overflow-hidden border-none bg-white/50 dark:bg-slate-900/50 backdrop-blur-md transition-all hover:shadow-2xl hover:shadow-blue-500/10 hover:-translate-y-1"
@@ -96,7 +205,7 @@ export default function MyProjectsSection() {
 						<div
 							className={`relative aspect-[16/10] ${project.previewColor} flex items-center justify-center overflow-hidden`}
 						>
-							{project.status === "completed" ? (
+							{/* {project.status === "completed" ? (
 								<div className="absolute inset-0 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity bg-black/40 backdrop-blur-[2px] z-10">
 									<Button
 										size="icon"
@@ -116,9 +225,17 @@ export default function MyProjectsSection() {
 										AI Designing...
 									</p>
 								</div>
-							)}
+							)} */}
 
-							<MonitorPlay size={48} className="text-slate-300 dark:text-slate-700 opacity-50" />
+							{project?.response[0]?.slides?.length == 0 ? (
+								<MonitorPlay size={48} className="text-slate-300 dark:text-slate-700 opacity-50" />
+							) : (
+								<iframe
+									className="w-full h-full pointer-events-none"
+									srcDoc={wrapSlideHtml(project?.response[0]?.slides[0]?.htmlContent)}
+									scrolling="no"
+								/>
+							)}
 
 							{/* Top Badges */}
 							<div className="absolute top-3 left-3 flex gap-2 z-20">
@@ -138,7 +255,7 @@ export default function MyProjectsSection() {
 											<Layers size={12} /> {project.slides} Slides
 										</span>
 										<span className="flex items-center gap-1">
-											<Clock size={12} /> {project.lastModified}
+											<Clock size={12} /> {project.createdAt}
 										</span>
 									</div>
 								</div>
@@ -154,14 +271,15 @@ export default function MyProjectsSection() {
 										</Button>
 									</DropdownMenuTrigger>
 									<DropdownMenuContent align="end" className="w-48 rounded-xl border-slate-200 dark:border-slate-800">
-										<DropdownMenuItem className="gap-2 py-2.5 cursor-pointer">
+										<DropdownMenuItem
+											onClick={() => downloadPPT(project?.response[0]?.slides || [])}
+											className="gap-2 py-2.5 cursor-pointer" >
 											<Download size={16} /> Download .pptx
 										</DropdownMenuItem>
-										<DropdownMenuItem className="gap-2 py-2.5 cursor-pointer">
-											<Copy size={16} /> Duplicate Project
-										</DropdownMenuItem>
 										<DropdownMenuSeparator />
-										<DropdownMenuItem className="gap-2 py-2.5 text-red-500 focus:text-red-500 cursor-pointer">
+										<DropdownMenuItem
+											onClick={() => deleteProject(project?.id)}
+											className="gap-2 py-2.5 text-red-500 focus:text-red-500 cursor-pointer">
 											<Trash2 size={16} /> Delete Forever
 										</DropdownMenuItem>
 									</DropdownMenuContent>

@@ -1,9 +1,10 @@
 "use client";
 
 import { useEffect, useRef, useState } from "react";
-import { CheckCircle, ChevronLeft, ChevronRight, Layers, MessageSquare, Monitor, Save, Zap } from "lucide-react";
+import { CheckCircle, ChevronLeft, ChevronRight, Download, Layers, MessageSquare, Monitor, Save, Zap } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import StudioSkeleton from "../StudioSkeleton";
+import { downloadPresentation, fixDesignLayout } from "@/lib/ppt-generation";
 
 interface SlideData {
 	slideIndex: number;
@@ -89,6 +90,7 @@ const AdvancedSlideStudio = ({ slidesArray, loading }: AdvancedSlideStudioProps)
 	const [currentIdx, setCurrentIdx] = useState(0);
 	const [isSaving, setIsSaving] = useState(false);
 	const iframeRef = useRef<HTMLIFrameElement>(null);
+	const [isDownloading, setIsDownloading] = useState(false);
 
 	useEffect(() => {
 		setSlides(slidesArray);
@@ -119,8 +121,9 @@ const AdvancedSlideStudio = ({ slidesArray, loading }: AdvancedSlideStudioProps)
 		}
 	}, [currentIdx, slides]);
 
-	const handleSave = () => {
-		setIsSaving(true);
+	const handleSave = async (flag?: boolean) => {
+		// setIsSaving(true);
+		setIsDownloading(true);
 		const doc = iframeRef.current?.contentDocument;
 		// Target the inner HTML of the AI generated slide
 		const slideEl = doc?.querySelector(".slide");
@@ -128,9 +131,29 @@ const AdvancedSlideStudio = ({ slidesArray, loading }: AdvancedSlideStudioProps)
 			const updatedHTML = slideEl.outerHTML; // Save the full slide structure
 			const updatedSlides = [...slides];
 			updatedSlides[currentIdx].htmlContent = updatedHTML;
-			setSlides(updatedSlides);
+			// setSlides(updatedSlides);
+
+			try {
+				const endSlides = updatedSlides.map((slide) => {
+					return {
+						...slide,
+						htmlContent: wrapSlideHtml(slide.htmlContent)
+					}
+				})
+				// We import the service we just wrote
+				if (flag) fixDesignLayout(endSlides);
+				await downloadPresentation(endSlides);
+
+				// Optional: Show a success toast/notification
+				console.log("Download started!");
+			} catch (err) {
+				console.error("PPT Export Error:", err);
+			} finally {
+				setIsDownloading(false);
+			}
 		}
-		setTimeout(() => setIsSaving(false), 800);
+
+		// setTimeout(() => setIsSaving(false), 800);
 	};
 
 	if (loading) return <StudioSkeleton />;
@@ -147,9 +170,9 @@ const AdvancedSlideStudio = ({ slidesArray, loading }: AdvancedSlideStudioProps)
 	}
 
 	return (
-		<div className="h-screen w-full bg-[#020617] text-slate-100 flex flex-col overflow-hidden">
+		<div className="-m-8 bg-[#020617] text-slate-100 flex flex-col overflow-hidden">
 			{/* NAVIGATION */}
-			<nav className="h-16 shrink-0 bg-slate-900/50 backdrop-blur-md border-b border-white/5 px-6 flex items-center justify-between z-50">
+			<nav className="h-24 shrink-0 bg-slate-900/50 backdrop-blur-md border-b border-white/5 px-6 flex items-center justify-between z-50">
 				<div className="flex items-center gap-4">
 					<div className="font-bold text-sm tracking-tighter text-blue-400">GEMINI STUDIO</div>
 					<div className="h-4 w-[1px] bg-white/10" />
@@ -157,12 +180,24 @@ const AdvancedSlideStudio = ({ slidesArray, loading }: AdvancedSlideStudioProps)
 				</div>
 
 				<Button
-					onClick={handleSave}
+					onClick={() => handleSave(true)}
 					disabled={isSaving}
 					className="bg-blue-600 hover:bg-blue-500 text-xs font-bold h-9"
 				>
-					{isSaving ? <CheckCircle size={14} className="animate-pulse" /> : <Save size={14} />}
-					<span className="ml-2">SAVE CHANGES</span>
+					<span className="ml-2 text-white">Fix Layout & Download</span>
+				</Button>
+
+				<Button
+					onClick={() => handleSave(false)}
+					disabled={isDownloading}
+					className="bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700"
+				>
+					{isDownloading ? (
+						<Zap className="animate-spin mr-2" size={14} />
+					) : (
+						<Save className="mr-2" size={14} />
+					)}
+					{isDownloading ? "GENERATING..." : "DOWNLOAD PPTX"}
 				</Button>
 			</nav>
 
@@ -194,10 +229,10 @@ const AdvancedSlideStudio = ({ slidesArray, loading }: AdvancedSlideStudioProps)
 				</aside>
 
 				{/* MAIN EDITOR */}
-				<main className="flex-1 flex flex-col bg-slate-950 relative p-8">
+				<main className="flex-1 flex flex-col relative p-8">
 					<div className="flex-1 flex items-center justify-center relative">
 						{/* THE ARTBOARD CONTAINER */}
-						<div className="w-full aspect-video bg-black rounded-xl overflow-hidden relative shadow-2xl">
+						<div className="w-full aspect-video  rounded-xl overflow-hidden relative shadow-2xl">
 							<iframe
 								ref={iframeRef}
 								style={{

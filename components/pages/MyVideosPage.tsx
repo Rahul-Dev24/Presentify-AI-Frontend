@@ -37,14 +37,24 @@ export default function MyProjectsTransparent() {
 	const [loading, setLoading] = React.useState<boolean | null>(true);
 	const [slideData, setSildesData] = useState<any[]>([]);
 
+
+
+	const types = {
+		"VIDEO": "video",
+		"AUDIO": "audio",
+		"YOUTUBE": "youtube",
+		"LOCAL_VIDEO": "Local Video",
+	}
+
 	useEffect(() => {
 		getVideo();
 	}, []);
 
 	const getVideo = async (search?: string) => {
+		console.log("search", search);
 		try {
 			setLoading(true);
-			const response = await api.get("video/userFiles", { data: { search } });
+			const response = await api.get("video/userFiles", { params: { search } });
 			const { res } = await getResponseData(response);
 
 			console.log("res", res);
@@ -77,11 +87,11 @@ export default function MyProjectsTransparent() {
 		getVideo(searchText);
 	}, 600);
 
-	const getSlideData = async (fileId: any) => {
-		const response = await api.post("video/getSlidesByFileId", { fileId });
+	const getSlideData = async (project: any) => {
+		const response = await api.post("video/getSlidesByFileId", { fileId: project?.id });
 		const { res } = await getResponseData(response);
 		setSildesData(res?.data?.response[0]?.slides)
-		console.log(res);
+		console.log(project);
 
 	}
 
@@ -93,6 +103,9 @@ export default function MyProjectsTransparent() {
 				<div className="space-y-6 bg-transparent text-white">
 					{/* --- Filter & Search Header --- */}
 					<div className="flex flex-col md:flex-row gap-4 items-center justify-between bg-white/[0.03] p-4 rounded-2xl backdrop-blur-3xl border border-white/10">
+						<div>
+							<h1 className="text-2xl font-bold text-gray-200" >My Assets</h1>
+						</div>
 						<div className="relative w-full md:w-96">
 							<Search className="absolute left-3 top-1/2 -translate-y-1/2 text-slate-500" size={18} />
 							<Input
@@ -101,7 +114,7 @@ export default function MyProjectsTransparent() {
 								className="pl-10 bg-white/[0.05] border-white/10 focus:border-blue-500/50 rounded-xl h-11 text-white"
 							/>
 						</div>
-						<div className="flex items-center gap-2 w-full md:w-auto">
+						{/* <div className="flex items-center gap-2 w-full md:w-auto">
 							<Button
 								variant="ghost"
 								className="flex-1 md:flex-none gap-2 rounded-xl bg-white/[0.05] border border-white/10 hover:bg-white/10 transition-all"
@@ -111,7 +124,7 @@ export default function MyProjectsTransparent() {
 							<Button className="flex-1 md:flex-none gap-2 bg-blue-600 hover:bg-blue-500 rounded-xl shadow-lg shadow-blue-500/20 font-bold">
 								Recent First
 							</Button>
-						</div>
+						</div> */}
 					</div>
 
 					{/* --- Projects Grid --- */}
@@ -155,7 +168,7 @@ export default function MyProjectsTransparent() {
 												className="bg-slate-900/90 border-white/10 backdrop-blur-xl text-white"
 											>
 												<DropdownMenuItem
-													onClick={() => getSlideData(project?.id)}
+													onClick={() => getSlideData(project)}
 													className="gap-2 focus:bg-white/10 cursor-pointer">
 													<Download size={16} /> Download .pptx
 												</DropdownMenuItem>
@@ -172,7 +185,7 @@ export default function MyProjectsTransparent() {
 									className={`h-1 -mt-3 w-full bg-linear-to-r ${project.status === "processing" ? "from-amber-400/50 to-orange-500/50" : "from-blue-600/50 to-purple-600/50"}`}
 								/>
 								<div className="flex justify-end bg-black rounded-full px-2 py-1 w-fit absolute right-2">
-									<span>{project?.type}</span>
+									<span>{types[project.type]}</span>
 								</div>
 							</Card>
 						))}
