@@ -39,7 +39,7 @@ export default function MyProjectsTransparent() {
 
 
 
-	const types = {
+	const types: any = {
 		"VIDEO": "video",
 		"AUDIO": "audio",
 		"YOUTUBE": "youtube",
