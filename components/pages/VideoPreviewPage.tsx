@@ -10,7 +10,15 @@ import MetaPointPage from "./Meta-point";
 
 const LoadingSteps = ["Loading Media", "Extracting Media", "Media Extracted", "Generating Slides", "All Most Done..."];
 
-const VideoPreviewPage = ({ data, fileId = 0, showPreview }: { data: any; fileId?: number; showPreview: (a: boolean) => void }) => {
+const VideoPreviewPage = ({
+	data,
+	fileId = 0,
+	showPreview,
+}: {
+	data: any;
+	fileId?: number;
+	showPreview: (a: boolean) => void;
+}) => {
 	// const [ppt, setPPT] = useState<any>([]);
 	const [isLoadingPPT, setIsLoadingPPT] = useState(false);
 	const [showPPT, setShowPPT] = useState(false);

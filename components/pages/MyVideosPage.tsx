@@ -12,6 +12,7 @@ import {
 	SlidersHorizontal,
 	Trash2,
 } from "lucide-react";
+import toast from "react-hot-toast";
 
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
@@ -23,28 +24,23 @@ import {
 } from "@/components/ui/dropdown-menu";
 import { Input } from "@/components/ui/input";
 import { api, getResponseData } from "@/lib/api";
-import VideoPlayer from "../VideoPlayer";
 import { debounce, formateDate } from "@/lib/utils";
-import toast from "react-hot-toast";
 import NoRecordFound from "../NoRecordFound";
 import Loading from "../ui/loading";
+import VideoPlayer from "../VideoPlayer";
 import AdvancedSlideStudio from "./PPTView";
 
-
 export default function MyProjectsTransparent() {
-
 	const [videos, setVideos] = React.useState<any>([]);
 	const [loading, setLoading] = React.useState<boolean | null>(true);
 	const [slideData, setSildesData] = useState<any[]>([]);
 
-
-
 	const types: any = {
-		"VIDEO": "video",
-		"AUDIO": "audio",
-		"YOUTUBE": "youtube",
-		"LOCAL_VIDEO": "Local Video",
-	}
+		VIDEO: "video",
+		AUDIO: "audio",
+		YOUTUBE: "youtube",
+		LOCAL_VIDEO: "Local Video",
+	};
 
 	useEffect(() => {
 		getVideo();
@@ -61,7 +57,7 @@ export default function MyProjectsTransparent() {
 
 			const data = (res?.data || []).map((item: any) => ({
 				...item,
-				createdAt: formateDate(item?.createdAt) // ✅ fixed name
+				createdAt: formateDate(item?.createdAt), // ✅ fixed name
 			}));
 			setLoading(false);
 			setVideos(data);
@@ -81,7 +77,7 @@ export default function MyProjectsTransparent() {
 			toast.error(error?.message);
 			console.error("Error fetching videos:", error);
 		}
-	}
+	};
 
 	const searchVideo = debounce(async (searchText: string) => {
 		getVideo(searchText);
@@ -90,10 +86,9 @@ export default function MyProjectsTransparent() {
 	const getSlideData = async (project: any) => {
 		const response = await api.post("video/getSlidesByFileId", { fileId: project?.id });
 		const { res } = await getResponseData(response);
-		setSildesData(res?.data?.response[0]?.slides)
+		setSildesData(res?.data?.response[0]?.slides);
 		console.log(project);
-
-	}
+	};
 
 	return (
 		<>
@@ -104,7 +99,7 @@ export default function MyProjectsTransparent() {
 					{/* --- Filter & Search Header --- */}
 					<div className="flex flex-col md:flex-row gap-4 items-center justify-between bg-white/[0.03] p-4 rounded-2xl backdrop-blur-3xl border border-white/10">
 						<div>
-							<h1 className="text-2xl font-bold text-gray-200" >My Assets</h1>
+							<h1 className="text-2xl font-bold text-gray-200">My Assets</h1>
 						</div>
 						<div className="relative w-full md:w-96">
 							<Search className="absolute left-3 top-1/2 -translate-y-1/2 text-slate-500" size={18} />
@@ -129,8 +124,16 @@ export default function MyProjectsTransparent() {
 
 					{/* --- Projects Grid --- */}
 					<div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-						{loading && <div className="col-span-12 rounded-2xl overflow-hidden" ><Loading /></div>}
-						{!loading && videos?.length === 0 && <div className="col-span-12 rounded-2xl overflow-hidden" ><NoRecordFound /></div>}
+						{loading && (
+							<div className="col-span-12 rounded-2xl overflow-hidden">
+								<Loading />
+							</div>
+						)}
+						{!loading && videos?.length === 0 && (
+							<div className="col-span-12 rounded-2xl overflow-hidden">
+								<NoRecordFound />
+							</div>
+						)}
 						{videos?.map((project: any) => (
 							<Card
 								key={project.id}
@@ -169,12 +172,14 @@ export default function MyProjectsTransparent() {
 											>
 												<DropdownMenuItem
 													onClick={() => getSlideData(project)}
-													className="gap-2 focus:bg-white/10 cursor-pointer">
+													className="gap-2 focus:bg-white/10 cursor-pointer"
+												>
 													<Download size={16} /> Download .pptx
 												</DropdownMenuItem>
 												<DropdownMenuItem
 													onClick={() => deleteVideo(project?.id)}
-													className="gap-2 focus:bg-white/10 cursor-pointer text-red-400 focus:text-red-400">
+													className="gap-2 focus:bg-white/10 cursor-pointer text-red-400 focus:text-red-400"
+												>
 													<Trash2 size={16} /> Delete
 												</DropdownMenuItem>
 											</DropdownMenuContent>

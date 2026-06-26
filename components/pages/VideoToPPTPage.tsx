@@ -51,7 +51,6 @@ const VideoToPPTPage = ({ Header }: Props) => {
 		else toast.error("Failed to upload file");
 	};
 
-
 	const showPreviewHandler = (flag: boolean) => {
 		setShowPreview(flag);
 		setLoadingStepCount(0);
@@ -133,12 +132,10 @@ const VideoToPPTPage = ({ Header }: Props) => {
 										<Tabs defaultValue="video" onValueChange={setSourceType} className="w-full">
 											<div className="border-b dark:border-gray-700 bg-[#0f172a] p-4 pt-6 -mt-6">
 												<TabsList className="grid w-full grid-cols-2 max-w-md mx-auto bg-gray-200/50 dark:bg-gray-800/50">
-													<TabsTrigger
-														value="video" className="gap-2">
+													<TabsTrigger value="video" className="gap-2">
 														<Video size={16} /> Video
 													</TabsTrigger>
-													<TabsTrigger
-														value="audio" className="gap-2">
+													<TabsTrigger value="audio" className="gap-2">
 														<Mic size={16} /> Audio
 													</TabsTrigger>
 												</TabsList>
@@ -172,8 +169,6 @@ const VideoToPPTPage = ({ Header }: Props) => {
 														</>
 													)}
 
-
-
 													{uploadedFile ? (
 														<VideoPlayer url={uploadedFile?.secure_url} />
 													) : (
@@ -186,9 +181,7 @@ const VideoToPPTPage = ({ Header }: Props) => {
 													{/* <Button variant="outline" className="flex-1 h-12 rounded-xl gap-2">
 														<Settings size={18} /> Presentation Settings
 													</Button> */}
-													<div className="flex-2 h-12 rounded-xl gap-2">
-
-													</div>
+													<div className="flex-2 h-12 rounded-xl gap-2"></div>
 													<Button
 														onClick={() => handleExtraction()}
 														className="flex-1 h-12 rounded-xl bg-linear-to-r from-blue-600 to-purple-600 hover:opacity-90 shadow-lg shadow-blue-500/25 gap-2 text-md font-bold"

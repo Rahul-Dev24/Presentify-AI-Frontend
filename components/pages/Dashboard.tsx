@@ -1,17 +1,16 @@
+import { useEffect, useState } from "react";
 import { CheckCircle2, FileText, FileVideo, Mic, Presentation, Sparkles } from "lucide-react";
+import toast from "react-hot-toast";
 
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { api, getResponseData } from "@/lib/api";
 import { SourceDistribution } from "../DebounceChart";
 import { UsageChart } from "../UserChat";
-import { useEffect, useState } from "react";
-import toast from "react-hot-toast";
-import { api, getResponseData } from "@/lib/api";
 
 const DashboardPage = () => {
-
 	const [creditCount, setCreditCount] = useState<number | null>(0);
 	const maxCredits = 50;
 
@@ -29,9 +28,7 @@ const DashboardPage = () => {
 	}, []);
 
 	// Calculate percentage (clamped between 0-100)
-	const percentage = creditCount !== null
-		? Math.min((creditCount / maxCredits) * 100, 100)
-		: 0;
+	const percentage = creditCount !== null ? Math.min((creditCount / maxCredits) * 100, 100) : 0;
 
 	return (
 		<>
@@ -202,7 +199,6 @@ const DashboardPage = () => {
 							<SourceDistribution />
 						</div>
 
-
 						<div className="lg:col-span-1">
 							{[
 								{
@@ -228,7 +224,6 @@ const DashboardPage = () => {
 								</div>
 							))}
 						</div>
-
 					</div>
 				</TabsContent>
 

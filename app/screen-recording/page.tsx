@@ -32,7 +32,7 @@ interface ScreenshotStats {
 	saved: number;
 }
 
-const ScreenRecordingPage = ({ isFrom = 'home' }: { isFrom?: string }) => {
+const ScreenRecordingPage = ({ isFrom = "home" }: { isFrom?: string }) => {
 	// Recording state
 	const [recordingState, setRecordingState] = useState<RecordingState>("idle");
 	const [recordingTime, setRecordingTime] = useState<number>(0);
@@ -463,10 +463,16 @@ const ScreenRecordingPage = ({ isFrom = 'home' }: { isFrom?: string }) => {
 			</div>
 
 			{/* Header */}
-			<header className={isFrom !== 'home' ? "h-24 relative z-10 border-b border-zinc-800/50 backdrop-blur-sm" : "relative z-10 border-b border-zinc-800/50 backdrop-blur-sm"}>
+			<header
+				className={
+					isFrom !== "home"
+						? "h-24 relative z-10 border-b border-zinc-800/50 backdrop-blur-sm"
+						: "relative z-10 border-b border-zinc-800/50 backdrop-blur-sm"
+				}
+			>
 				<div className="container mx-auto px-6 py-4">
 					<nav className="flex items-center justify-between">
-						{isFrom == 'home' && (
+						{isFrom == "home" && (
 							<Link href="/" className="flex items-center space-x-2 hover:opacity-80 transition-opacity">
 								<ArrowLeft className="h-5 w-5" />
 								<span>Return to homepage</span>

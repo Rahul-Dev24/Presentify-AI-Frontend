@@ -13,6 +13,7 @@ import {
 	SlidersHorizontal,
 	Trash2,
 } from "lucide-react";
+import toast from "react-hot-toast";
 
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
@@ -26,11 +27,10 @@ import {
 } from "@/components/ui/dropdown-menu";
 import { Input } from "@/components/ui/input";
 import { api, getResponseData } from "@/lib/api";
+import { downloadPresentation } from "@/lib/ppt-generation";
+import { debounce, formateDate } from "@/lib/utils";
 import NoRecordFound from "../NoRecordFound";
 import Loading from "../ui/loading";
-import { debounce, formateDate } from "@/lib/utils";
-import { downloadPresentation } from "@/lib/ppt-generation";
-import toast from "react-hot-toast";
 
 const SLIDE_CORE_CSS = `
  * { 
@@ -95,9 +95,9 @@ const wrapSlideHtml = (html: string) => `
 `;
 
 const tagsMap: Record<string, string> = {
-	"YOUTUBE": 'Youtube',
-	"LOCAL_VIDEO": 'Local Video',
-	"AUDIO": 'Audio',
+	YOUTUBE: "Youtube",
+	LOCAL_VIDEO: "Local Video",
+	AUDIO: "Audio",
 } as const;
 
 export default function MyProjectsSection() {
@@ -113,28 +113,27 @@ export default function MyProjectsSection() {
 		const { res } = await getResponseData(await api.get("/project/getProject", { params: { search } }));
 		const data = (res?.data || []).map((item: any) => ({
 			...item,
-			createdAt: formateDate(item?.createdAt) // ✅ fixed name
+			createdAt: formateDate(item?.createdAt), // ✅ fixed name
 		}));
 		console.log(data[0]?.response);
 		setProjects(data);
 		setLoading(false);
-
-	}
+	};
 
 	const downloadPPT = async (slides: any[]) => {
 		console.log("slides", slides);
 
 		if (slides?.length === 0) {
 			toast.error("Please add at least one slide");
-			return
+			return;
 		}
 		try {
 			const endSlides = slides.map((slide) => {
 				return {
 					...slide,
-					htmlContent: wrapSlideHtml(slide.htmlContent)
-				}
-			})
+					htmlContent: wrapSlideHtml(slide.htmlContent),
+				};
+			});
 			// We import the service we just wrote
 			await downloadPresentation(endSlides);
 
@@ -143,7 +142,7 @@ export default function MyProjectsSection() {
 		} catch (err) {
 			toast.error("PPT Export Error");
 		}
-	}
+	};
 
 	const deleteProject = async (fileId: string) => {
 		try {
@@ -156,7 +155,7 @@ export default function MyProjectsSection() {
 			toast.error(error?.message);
 			console.error("Error fetching project:", error);
 		}
-	}
+	};
 
 	const searchProject = debounce(async (searchText: string) => {
 		getProjects(searchText);
@@ -167,9 +166,8 @@ export default function MyProjectsSection() {
 			{/* --- Filter & Search Header --- */}
 
 			<div className="flex flex-col md:flex-row gap-4 items-center justify-between bg-white/[0.03] p-4 rounded-2xl backdrop-blur-3xl border border-white/10">
-
 				<div>
-					<h1 className="text-2xl font-bold text-gray-200" >My Projects</h1>
+					<h1 className="text-2xl font-bold text-gray-200">My Projects</h1>
 				</div>
 				<div className="relative w-full md:w-96">
 					<Search className="absolute left-3 top-1/2 -translate-y-1/2 text-slate-500" size={18} />
@@ -194,8 +192,16 @@ export default function MyProjectsSection() {
 
 			{/* --- Projects Grid --- */}
 			<div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-				{loading && <div className="col-span-12 rounded-2xl overflow-hidden" ><Loading /></div>}
-				{!loading && projects?.length === 0 && <div className="col-span-12 rounded-2xl overflow-hidden" ><NoRecordFound /></div>}
+				{loading && (
+					<div className="col-span-12 rounded-2xl overflow-hidden">
+						<Loading />
+					</div>
+				)}
+				{!loading && projects?.length === 0 && (
+					<div className="col-span-12 rounded-2xl overflow-hidden">
+						<NoRecordFound />
+					</div>
+				)}
 				{projects.map((project) => (
 					<Card
 						key={project.id}
@@ -273,13 +279,15 @@ export default function MyProjectsSection() {
 									<DropdownMenuContent align="end" className="w-48 rounded-xl border-slate-200 dark:border-slate-800">
 										<DropdownMenuItem
 											onClick={() => downloadPPT(project?.response[0]?.slides || [])}
-											className="gap-2 py-2.5 cursor-pointer" >
+											className="gap-2 py-2.5 cursor-pointer"
+										>
 											<Download size={16} /> Download .pptx
 										</DropdownMenuItem>
 										<DropdownMenuSeparator />
 										<DropdownMenuItem
 											onClick={() => deleteProject(project?.id)}
-											className="gap-2 py-2.5 text-red-500 focus:text-red-500 cursor-pointer">
+											className="gap-2 py-2.5 text-red-500 focus:text-red-500 cursor-pointer"
+										>
 											<Trash2 size={16} /> Delete Forever
 										</DropdownMenuItem>
 									</DropdownMenuContent>

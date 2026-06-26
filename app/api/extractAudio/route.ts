@@ -29,8 +29,6 @@ export async function POST(req: Request) {
 			// REQUIRED (2025+)
 			jsRuntimes: "node",
 
-
-
 			format: "bestaudio/best",
 		});
 

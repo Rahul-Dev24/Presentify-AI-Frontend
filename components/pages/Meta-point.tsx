@@ -1,7 +1,8 @@
 import React, { ChangeEvent, useEffect, useState } from "react";
 import { CheckCircle2, ChevronLeft, ChevronRight, Code, Plus, Save, Sparkles, Trash2, X } from "lucide-react";
-import { api, getResponseData } from "@/lib/api";
 import toast from "react-hot-toast";
+
+import { api, getResponseData } from "@/lib/api";
 import AdvancedSlideStudio from "./PPTView";
 
 interface Slide {
@@ -29,7 +30,7 @@ const INITIAL_DATA: Slide[] = [
 	},
 ];
 
-const MetaPointPage = ({ silde, fileId }: { silde: any[], fileId: number }) => {
+const MetaPointPage = ({ silde, fileId }: { silde: any[]; fileId: number }) => {
 	const [slides, setSlides] = useState<any[]>(silde || INITIAL_DATA);
 	const [activeIndex, setActiveIndex] = useState<number>(0);
 	const [showJson, setShowJson] = useState<boolean>(false);
@@ -117,16 +118,17 @@ const MetaPointPage = ({ silde, fileId }: { silde: any[], fileId: number }) => {
 			setPPTLoading(false);
 
 			console.log("gfhjfghgfjfgjhgfjhfjhf", data);
-
 		} catch (err: any) {
 			toast.error(err.message);
 			setShowPPT(false);
 		}
-	}
+	};
 
 	return (
 		<>
-			{showPPT ? (<AdvancedSlideStudio loading={pptLoading} slidesArray={ppt} />) : (
+			{showPPT ? (
+				<AdvancedSlideStudio loading={pptLoading} slidesArray={ppt} />
+			) : (
 				<div className="min-h-screen text-slate-200 animate-in fade-in duration-700 overflow-x-hidden">
 					{/* Top Action Bar */}
 					<div className="w-full flex flex-col sm:flex-row items-start sm:items-center justify-between mb-8 gap-4 sm:gap-0">
@@ -207,10 +209,11 @@ const MetaPointPage = ({ silde, fileId }: { silde: any[], fileId: number }) => {
 								<button
 									key={idx}
 									onClick={() => setActiveIndex(idx)}
-									className={`shrink-0 transition-all duration-300 ${activeIndex === idx
-										? "bg-indigo-500 shadow-[0_0_12px_rgba(99,102,241,0.8)] w-8 h-2 rounded-full"
-										: "bg-slate-800 hover:bg-slate-700 w-2 h-2 rounded-full"
-										}`}
+									className={`shrink-0 transition-all duration-300 ${
+										activeIndex === idx
+											? "bg-indigo-500 shadow-[0_0_12px_rgba(99,102,241,0.8)] w-8 h-2 rounded-full"
+											: "bg-slate-800 hover:bg-slate-700 w-2 h-2 rounded-full"
+									}`}
 									aria-label={`Go to slide ${idx + 1}`}
 								/>
 							))}
@@ -275,17 +278,19 @@ const MetaPointPage = ({ silde, fileId }: { silde: any[], fileId: number }) => {
 											{activeSlide?.bullets?.map((bullet: any, bIdx: any) => (
 												<div
 													key={bIdx}
-													className={`group/item relative flex gap-3 sm:gap-6 p-4 sm:p-8 rounded-xl sm:rounded-3xl transition-all duration-500 border ${isFocused === bIdx
-														? "bg-indigo-500/3 border-indigo-500/30 shadow-xl"
-														: "bg-transparent border-slate-800/40 hover:border-slate-700"
-														}`}
+													className={`group/item relative flex gap-3 sm:gap-6 p-4 sm:p-8 rounded-xl sm:rounded-3xl transition-all duration-500 border ${
+														isFocused === bIdx
+															? "bg-indigo-500/3 border-indigo-500/30 shadow-xl"
+															: "bg-transparent border-slate-800/40 hover:border-slate-700"
+													}`}
 												>
 													<div className="flex flex-col items-center gap-3 sm:gap-4 shrink-0">
 														<div
-															className={`w-1.5 h-1.5 rounded-full transition-all duration-300 ${isFocused === bIdx
-																? "bg-indigo-400 scale-150 shadow-[0_0_8px_rgba(129,140,248,0.8)]"
-																: "bg-slate-700"
-																}`}
+															className={`w-1.5 h-1.5 rounded-full transition-all duration-300 ${
+																isFocused === bIdx
+																	? "bg-indigo-400 scale-150 shadow-[0_0_8px_rgba(129,140,248,0.8)]"
+																	: "bg-slate-700"
+															}`}
 														/>
 														<div className="w-px flex-1 bg-slate-800 group-hover/item:bg-slate-700 transition-colors" />
 													</div>
@@ -295,7 +300,9 @@ const MetaPointPage = ({ silde, fileId }: { silde: any[], fileId: number }) => {
 															value={bullet}
 															onFocus={() => setIsFocused(bIdx)}
 															onBlur={() => setIsFocused(null)}
-															onChange={(e: ChangeEvent<HTMLTextAreaElement>) => handleUpdateBullet(bIdx, e.target.value)}
+															onChange={(e: ChangeEvent<HTMLTextAreaElement>) =>
+																handleUpdateBullet(bIdx, e.target.value)
+															}
 															rows={1}
 															onInput={(e: React.FormEvent<HTMLTextAreaElement>) => {
 																const target = e.target as HTMLTextAreaElement;
@@ -366,19 +373,19 @@ const MetaPointPage = ({ silde, fileId }: { silde: any[], fileId: number }) => {
 					)}
 
 					<style jsx>{`
-				input::placeholder,
-				textarea::placeholder {
-					font-weight: 900;
-					opacity: 0.1;
-				}
-				.scrollbar-hide::-webkit-scrollbar {
-					display: none;
-				}
-				.scrollbar-hide {
-					-ms-overflow-style: none;
-					scrollbar-width: none;
-				}
-			`}</style>
+						input::placeholder,
+						textarea::placeholder {
+							font-weight: 900;
+							opacity: 0.1;
+						}
+						.scrollbar-hide::-webkit-scrollbar {
+							display: none;
+						}
+						.scrollbar-hide {
+							-ms-overflow-style: none;
+							scrollbar-width: none;
+						}
+					`}</style>
 				</div>
 			)}
 		</>

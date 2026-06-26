@@ -1,22 +1,20 @@
 "use client";
 
+import { useEffect, useState } from "react";
 import { Camera, Fingerprint, Github, Globe, Shield, Sparkles, Twitter, Wallet, Zap } from "lucide-react";
+import toast from "react-hot-toast";
 
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Switch } from "@/components/ui/switch";
-import { useEffect, useState } from "react";
 import { useAuth } from "@/context/AuthContext";
-import toast from "react-hot-toast";
 import { api, getResponseData } from "@/lib/api";
 
 export default function SettingsTransparent() {
-
 	const [name, setName] = useState<string>("");
 	const [email, setEmail] = useState<string>("");
-
 
 	useEffect(() => {
 		getProfile();
@@ -38,19 +36,19 @@ export default function SettingsTransparent() {
 		}
 		const userName = name?.split(" ");
 		try {
-			const updatedUser = await getResponseData(await api.put("/user/update", {
-				fName: userName[0],
-				lName: userName[1],
-				email
-			}));
+			const updatedUser = await getResponseData(
+				await api.put("/user/update", {
+					fName: userName[0],
+					lName: userName[1],
+					email,
+				})
+			);
 			if (updatedUser) toast.success("Profile updated successfully");
-			getProfile()
+			getProfile();
 		} catch (err: any) {
 			toast.error(err.message);
 		}
-
 	};
-
 
 	return (
 		// Parent is now transparent - it will inherit the background of your Layout/Wrapper
@@ -117,7 +115,8 @@ export default function SettingsTransparent() {
 								</div>
 								<Button
 									onClick={updateProfile}
-									className="bg-white/90 hover:bg-white text-black rounded-2xl px-10 h-12 font-bold transition-all shadow-xl shadow-white/5">
+									className="bg-white/90 hover:bg-white text-black rounded-2xl px-10 h-12 font-bold transition-all shadow-xl shadow-white/5"
+								>
 									Update Profile
 								</Button>
 							</div>

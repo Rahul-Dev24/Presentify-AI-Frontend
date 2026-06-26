@@ -11,7 +11,7 @@ type SourceType = "video" | "audio";
 
 export default function FileUploader({
 	sourceType,
-	setUploadedFile
+	setUploadedFile,
 }: {
 	sourceType: SourceType;
 	setUploadedFile: (a: any) => void;
@@ -54,7 +54,6 @@ export default function FileUploader({
 		formData.append("folder", "uploads");
 		formData.append("resource_type", "auto");
 
-
 		// Use XHR for progress
 		const uploadData = await new Promise<void>((resolve, reject) => {
 			const xhr = new XMLHttpRequest();
@@ -85,8 +84,6 @@ export default function FileUploader({
 
 			xhr.send(formData);
 		});
-
-
 	};
 
 	// 3️⃣ Drag & Drop support

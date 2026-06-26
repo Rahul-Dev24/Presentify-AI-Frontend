@@ -3,7 +3,6 @@ import axios, { Axios } from "axios";
 export const api: Axios = axios.create({
 	baseURL: "https://presentify-ai-backend.onrender.com/api/v1",
 	withCredentials: true,
-
 });
 
 export const getResponseData = async (res: any): Promise<{ metaData: any; res: any }> => {

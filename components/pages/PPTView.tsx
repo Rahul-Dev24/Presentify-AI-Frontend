@@ -1,10 +1,21 @@
 "use client";
 
 import { useEffect, useRef, useState } from "react";
-import { CheckCircle, ChevronLeft, ChevronRight, Download, Layers, MessageSquare, Monitor, Save, Zap } from "lucide-react";
+import {
+	CheckCircle,
+	ChevronLeft,
+	ChevronRight,
+	Download,
+	Layers,
+	MessageSquare,
+	Monitor,
+	Save,
+	Zap,
+} from "lucide-react";
+
 import { Button } from "@/components/ui/button";
-import StudioSkeleton from "../StudioSkeleton";
 import { downloadPresentation, fixDesignLayout } from "@/lib/ppt-generation";
+import StudioSkeleton from "../StudioSkeleton";
 
 interface SlideData {
 	slideIndex: number;
@@ -137,9 +148,9 @@ const AdvancedSlideStudio = ({ slidesArray, loading }: AdvancedSlideStudioProps)
 				const endSlides = updatedSlides.map((slide) => {
 					return {
 						...slide,
-						htmlContent: wrapSlideHtml(slide.htmlContent)
-					}
-				})
+						htmlContent: wrapSlideHtml(slide.htmlContent),
+					};
+				});
 				// We import the service we just wrote
 				if (flag) fixDesignLayout(endSlides);
 				await downloadPresentation(endSlides);
@@ -192,11 +203,7 @@ const AdvancedSlideStudio = ({ slidesArray, loading }: AdvancedSlideStudioProps)
 					disabled={isDownloading}
 					className="bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700"
 				>
-					{isDownloading ? (
-						<Zap className="animate-spin mr-2" size={14} />
-					) : (
-						<Save className="mr-2" size={14} />
-					)}
+					{isDownloading ? <Zap className="animate-spin mr-2" size={14} /> : <Save className="mr-2" size={14} />}
 					{isDownloading ? "GENERATING..." : "DOWNLOAD PPTX"}
 				</Button>
 			</nav>
@@ -212,8 +219,11 @@ const AdvancedSlideStudio = ({ slidesArray, loading }: AdvancedSlideStudioProps)
 							<div key={i} className="space-y-2">
 								<button
 									onClick={() => setCurrentIdx(i)}
-									className={`relative w-full aspect-video rounded-lg overflow-hidden border-2 transition-all ${currentIdx === i ? "border-blue-500 ring-4 ring-blue-500/20" : "border-white/10 hover:border-white/20"
-										}`}
+									className={`relative w-full aspect-video rounded-lg overflow-hidden border-2 transition-all ${
+										currentIdx === i
+											? "border-blue-500 ring-4 ring-blue-500/20"
+											: "border-white/10 hover:border-white/20"
+									}`}
 								>
 									<iframe
 										className="w-full h-full pointer-events-none"
@@ -236,12 +246,12 @@ const AdvancedSlideStudio = ({ slidesArray, loading }: AdvancedSlideStudioProps)
 							<iframe
 								ref={iframeRef}
 								style={{
-									width: '1280px',
-									height: '720px',
-									border: 'none',
+									width: "1280px",
+									height: "720px",
+									border: "none",
 									// This is the key: we scale the 1280px iframe down to fit the responsive container
-									transform: `scale(${iframeRef.current ? (iframeRef.current.parentElement!.clientWidth / 1280) : 1})`,
-									transformOrigin: 'top left',
+									transform: `scale(${iframeRef.current ? iframeRef.current.parentElement!.clientWidth / 1280 : 1})`,
+									transformOrigin: "top left",
 								}}
 								className="absolute top-0 left-0"
 								scrolling="no"

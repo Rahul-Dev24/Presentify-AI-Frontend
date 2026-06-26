@@ -1,17 +1,13 @@
-import { generateTimestamp } from "./utils";
+import html2canvas from "html2canvas";
 import pptxgen from "pptxgenjs";
-import html2canvas from 'html2canvas';
 
-
+import { generateTimestamp } from "./utils";
 
 interface PPTSlideData {
 	image: string;
 	title?: string;
 	description?: string;
 }
-
-
-
 
 export const downloadPresentation = async (slidesArray: any[]) => {
 	const pptx = new pptxgen();
@@ -40,39 +36,56 @@ export const downloadPresentation = async (slidesArray: any[]) => {
 
 			if (tagName === "h1") {
 				pptsSlide.addText(el.textContent || "", {
-					x: marginX, y: currentY, w: 11, h: 0.9,
-					fontSize: 40, bold: true, color: "3B82F6", fontFace: "Arial"
+					x: marginX,
+					y: currentY,
+					w: 11,
+					h: 0.9,
+					fontSize: 40,
+					bold: true,
+					color: "3B82F6",
+					fontFace: "Arial",
 				});
 				currentY += 1.0; // Push next element down
-			}
-
-			else if (tagName === "h2") {
+			} else if (tagName === "h2") {
 				pptsSlide.addText(el.textContent || "", {
-					x: marginX, y: currentY, w: 11, h: 0.7,
-					fontSize: 30, bold: true, color: "E2E8F0", fontFace: "Arial"
+					x: marginX,
+					y: currentY,
+					w: 11,
+					h: 0.7,
+					fontSize: 30,
+					bold: true,
+					color: "E2E8F0",
+					fontFace: "Arial",
 				});
 				currentY += 0.8;
-			}
-
-			else if (tagName === "p") {
+			} else if (tagName === "p") {
 				pptsSlide.addText(el.textContent || "", {
-					x: marginX, y: currentY, w: maxW, h: 0.5,
-					fontSize: 18, color: "94A3B8", fontFace: "Arial"
+					x: marginX,
+					y: currentY,
+					w: maxW,
+					h: 0.5,
+					fontSize: 18,
+					color: "94A3B8",
+					fontFace: "Arial",
 				});
 				currentY += 0.6;
-			}
-
-			else if (tagName === "ul") {
-				const items = Array.from(el.querySelectorAll("li")).map(li => ({
+			} else if (tagName === "ul") {
+				const items = Array.from(el.querySelectorAll("li")).map((li) => ({
 					text: li.textContent || "",
-					options: { bullet: true, color: "E2E8F0" }
+					options: { bullet: true, color: "E2E8F0" },
 				}));
 
 				if (items.length > 0) {
 					const listHeight = items.length * 0.4 + 0.5;
 					pptsSlide.addText(items, {
-						x: marginX + 0.2, y: currentY, w: maxW, h: listHeight,
-						fontSize: 20, color: "E2E8F0", valign: "top", lineSpacing: 28
+						x: marginX + 0.2,
+						y: currentY,
+						w: maxW,
+						h: listHeight,
+						fontSize: 20,
+						color: "E2E8F0",
+						valign: "top",
+						lineSpacing: 28,
 					});
 					currentY += listHeight;
 				}
@@ -92,10 +105,13 @@ export const downloadPresentation = async (slidesArray: any[]) => {
 				pptsSlide.addImage({
 					data: svgBase64,
 					x: 10.2,
-					y: 1.2 + (idx * 2.2), // Vertical stack on the right
-					w: 2.0, h: 2.0
+					y: 1.2 + idx * 2.2, // Vertical stack on the right
+					w: 2.0,
+					h: 2.0,
 				});
-			} catch (e) { console.error(e); }
+			} catch (e) {
+				console.error(e);
+			}
 		});
 
 		if (slide.speakerNotes) pptsSlide.addNotes(slide.speakerNotes);
@@ -103,7 +119,6 @@ export const downloadPresentation = async (slidesArray: any[]) => {
 
 	await pptx.writeFile({ fileName: `Presentify_Export_${Date.now()}.pptx` });
 };
-
 
 const prepareElementForCanvas = (container: HTMLElement) => {
 	const allElements = container.querySelectorAll("*");
@@ -118,7 +133,7 @@ const prepareElementForCanvas = (container: HTMLElement) => {
 		htmlEl.style.borderColor = style.borderColor;
 
 		// 2. Handle SVG specific properties (common in modern icons)
-		if (htmlEl.tagName.toLowerCase() === 'svg' || htmlEl.closest('svg')) {
+		if (htmlEl.tagName.toLowerCase() === "svg" || htmlEl.closest("svg")) {
 			htmlEl.style.fill = style.fill;
 			htmlEl.style.stroke = style.stroke;
 		}
@@ -150,7 +165,7 @@ export const fixDesignLayout = async (slidesArray: any[]) => {
 		height: "720px", // 720p base height
 		zIndex: "-9999",
 		pointerEvents: "none",
-		backgroundColor: "#0F172A" // Match your Dark UI background
+		backgroundColor: "#0F172A", // Match your Dark UI background
 	});
 
 	document.body.appendChild(stagingContainer);
@@ -175,8 +190,8 @@ export const fixDesignLayout = async (slidesArray: any[]) => {
 
 			// 5. Take the high-res "screenshot" of the HTML
 			const canvas = await html2canvas(stagingContainer, {
-				scale: 2,           // Sharpness: 2 is standard, 3 is crystal clear but large file
-				useCORS: true,      // Essential for icons/images from external URLs
+				scale: 2, // Sharpness: 2 is standard, 3 is crystal clear but large file
+				useCORS: true, // Essential for icons/images from external URLs
 				logging: false,
 				backgroundColor: "#0F172A",
 				width: 1280,
@@ -192,7 +207,7 @@ export const fixDesignLayout = async (slidesArray: any[]) => {
 				x: 0,
 				y: 0,
 				w: 13.33,
-				h: 7.5
+				h: 7.5,
 			});
 
 			// 7. Attach Speaker Notes
@@ -202,9 +217,8 @@ export const fixDesignLayout = async (slidesArray: any[]) => {
 		}
 
 		// 8. Generate and Trigger Download
-		const timestamp = new Date().toISOString().split('T')[0];
+		const timestamp = new Date().toISOString().split("T")[0];
 		await pptx.writeFile({ fileName: `AI_Presentation_${timestamp}.pptx` });
-
 	} catch (error) {
 		console.error("PPTX Export failed:", error);
 	} finally {
@@ -214,7 +228,6 @@ export const fixDesignLayout = async (slidesArray: any[]) => {
 		}
 	}
 };
-
 
 export async function createAndDownloadPPT(
 	screenshots: string[],
@@ -327,8 +340,6 @@ export async function createAndDownloadPPT(
 		throw error;
 	}
 }
-
-
 
 export async function createPPTFromVideoAnalysis(
 	analysisResult: {

@@ -1,11 +1,11 @@
+import { useEffect, useState } from "react";
+import toast from "react-hot-toast";
 import { Label, Pie, PieChart } from "recharts";
 
 import { ChartContainer, ChartTooltip, ChartTooltipContent } from "@/components/ui/chart";
-import { Card, CardContent, CardHeader, CardTitle } from "./ui/card";
-import { useEffect, useState } from "react";
 import { api, getResponseData } from "@/lib/api";
-import toast from "react-hot-toast";
 import NoRecordFound from "./NoRecordFound";
+import { Card, CardContent, CardHeader, CardTitle } from "./ui/card";
 
 const sourceData = [
 	{ source: "video", count: 450, fill: "#3b82f6" },
@@ -14,7 +14,6 @@ const sourceData = [
 ];
 
 export function SourceDistribution() {
-
 	const [fileType, setFileType] = useState<any[]>([]);
 	const [count, setCount] = useState<number>(0);
 	useEffect(() => {
@@ -27,8 +26,7 @@ export function SourceDistribution() {
 			setFileType(res?.data);
 			const total = res?.data?.reduce((acc: number, item: any) => acc + item.count, 0);
 			setCount(total);
-		}
-		else toast.success(res?.message);
+		} else toast.success(res?.message);
 	};
 
 	return (
