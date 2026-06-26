@@ -36,7 +36,7 @@ type Props = {
 	isFrom?: string | undefined;
 };
 
-const ScreenRecordingPage = ({ isFrom = "home" }: Props) => {
+export default function ScreenRecordingPage({ isFrom = "home" }: Props) {
 	// Recording state
 	const [recordingState, setRecordingState] = useState<RecordingState>("idle");
 	const [recordingTime, setRecordingTime] = useState<number>(0);
@@ -44,7 +44,6 @@ const ScreenRecordingPage = ({ isFrom = "home" }: Props) => {
 
 	// State ref for timeout callbacks
 	const recordingStateRef = useRef<RecordingState>("idle");
-
 
 	// Update ref when state changes
 	useEffect(() => {
@@ -838,6 +837,4 @@ const ScreenRecordingPage = ({ isFrom = "home" }: Props) => {
 			<canvas ref={canvasRef} className="hidden" />
 		</div>
 	);
-};
-
-export default ScreenRecordingPage;
+}
