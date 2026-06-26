@@ -32,7 +32,7 @@ interface ScreenshotStats {
 	saved: number;
 }
 
-const ScreenRecordingPage = ({ isFrom }: { isFrom?: string }) => {
+const ScreenRecordingPage = ({ isFrom }: { isFrom?: any }) => {
 	// Recording state
 	const [recordingState, setRecordingState] = useState<RecordingState>("idle");
 	const [recordingTime, setRecordingTime] = useState<number>(0);
