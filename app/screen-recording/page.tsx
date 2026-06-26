@@ -32,7 +32,11 @@ interface ScreenshotStats {
 	saved: number;
 }
 
-const ScreenRecordingPage = ({ isFrom }: { isFrom?: any }) => {
+type Props = {
+	isFrom?: string | undefined;
+};
+
+const ScreenRecordingPage = ({ isFrom = "home" }: Props) => {
 	// Recording state
 	const [recordingState, setRecordingState] = useState<RecordingState>("idle");
 	const [recordingTime, setRecordingTime] = useState<number>(0);
@@ -41,9 +45,6 @@ const ScreenRecordingPage = ({ isFrom }: { isFrom?: any }) => {
 	// State ref for timeout callbacks
 	const recordingStateRef = useRef<RecordingState>("idle");
 
-	useState(() => {
-		isFrom = "home";
-	});
 
 	// Update ref when state changes
 	useEffect(() => {
