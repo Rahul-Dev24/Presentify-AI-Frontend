@@ -3,6 +3,8 @@
 import { createContext, ReactNode, useContext, useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 
+import { api, getResponseData } from "@/lib/api";
+
 interface AuthContextType {
 	isAuthenticated: boolean;
 	loading: boolean;
@@ -23,19 +25,22 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
 		setLoading(true); // 🔥 KEY FIX
 
 		try {
-			const res = await fetch("/api/me", {
-				credentials: "include",
-				cache: "no-store",
-			});
+			// const res = await fetch("/api/me", {
+			// 	credentials: "include",
+			// 	cache: "no-store",
+			// });
 
-			if (!res.ok) {
+			const allRes: any = await getResponseData(await api.get("/islogin/me"));
+			const res = allRes?.res;
+			console.log("qqqqqqqqqqqqqqqqqqq", res);
+			if (!res.success) {
 				setIsAuthenticated(false);
 				setUser({});
 				return;
 			}
 
-			const data = await res.json();
-			setUser(data.user || {});
+			// const data = await res?.json();
+			setUser(res.user || {});
 			setIsAuthenticated(true);
 		} catch {
 			setIsAuthenticated(false);
@@ -61,6 +66,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
 	const logout = async () => {
 		setLoading(true);
 		await fetch("/api/logout", { method: "POST" });
+		// await api.post("/islogin/logout")
 		setIsAuthenticated(false);
 		setUser({});
 		setLoading(false);
