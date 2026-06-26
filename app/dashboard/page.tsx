@@ -227,7 +227,7 @@ const Dashboard = () => {
 						<MyAudiosPage />
 					) : currentTab === "recording" ? (
 						<div className="-m-8">
-							<ScreenRecordingPage isFrom={"dashboard"} />
+							<ScreenRecordingPage />
 						</div>
 					) : null}
 				</div>
